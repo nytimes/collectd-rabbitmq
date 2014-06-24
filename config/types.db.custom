@@ -1,0 +1,4 @@
+queue   memory:GAUGE:0:U, consumers:GAUGE:0:U, deliver_get:GAUGE:0:U, deliver_get_rate:GAUGE:0:U, get:GAUGE:0:U, get_rate:GAUGE:0:U, publish:GAUGE:0:U, publish_rate:GAUGE:0:U, redeliver:GAUGE:0:U, redeliver_rate:GAUGE:0:U, messages:GAUGE:0:U, messages_rate:GAUGE:0:U, messages_ready:GAUGE:0:U, message_ready_rate:GAUGE:0:U, messages_unacknolwedged:GAUGE:0:U, messages_unacknowledged_rate:GAUGE:0:U  
+exchange confirm:GAUGE:0:U, confirm_rate:GAUGE:0:U, publish_in:GAUGE:0:U, publish_in_rate:GAUGE:0:U publish_out:GAUGE:0:U, publish_out_rate:GAUGE:0:U, return_unroutable:GAUGE:0:U, return_unroutable_rate:GAUGE:0:U
+node disk_free:GAUGE:0:U, disk_free_limit:GAUGE:0:U, fd_total:GAUGE:0:U, fd_used:GAUGE:0:U, mem_limit:GAUGE:0:U, mem_used:GAUGE:0:U, proc_total:GAUGE:0:U, proc_used:GAUGE:0:U, processors:GAUGE:0:U, run_queue:GAUGE:0:U, sockets_total:GAUGE:0:U, sockets_used:GAUGE:0:U
+
