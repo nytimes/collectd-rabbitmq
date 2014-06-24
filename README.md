@@ -1,0 +1,2 @@
+collectd-rabbitmq
+=================
