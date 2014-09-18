@@ -5,6 +5,7 @@ import collectd
 import urllib2
 import urllib
 import json
+import re
 
 RABBIT_API_URL = "http://{host}:{port}/api/"
 QUEUE_MESSAGE_RATE_STATS = ['deliver_get', 'get', 'publish', 'redeliver']
@@ -48,6 +49,11 @@ def configure(config_values):
             PLUGIN_CONFIG['port'] = config_value.values[0]
         elif config_value.key == 'Realm' and len (config_value.values) > 0:
             PLUGIN_CONFIG['realm'] = config_value.values[0]
+        elif config_value.key == 'Ignore' and len (config_value.values) > 0:
+            type_rmq = config_value.values[0]
+            PLUGIN_CONFIG['ignore'] = {type_rmq: []}
+            for regex in config_value.children:
+                PLUGIN_CONFIG['ignore'][type_rmq].append(regex.values[0])
 
 def init():
     '''
@@ -158,7 +164,19 @@ def dispatch_node_metrics(node):
         values.append(node.get(name, 0)) or 0
             
     dispatch_values(values, 'rabbitmq', 'node', node['name'])    
-    
+
+
+def want_to_ignore(type_rmq, name):
+    if 'ignore' in PLUGIN_CONFIG:
+        if type_rmq in PLUGIN_CONFIG['ignore']:
+            for regex in PLUGIN_CONFIG['ignore'][type_rmq]:
+                ignore_re = re.compile(regex)
+                match = ignore_re.match(name)
+                if match:
+                    return True
+    return False
+
+
 def read(input_data=None):
     '''
     reads all metrics from rabbitmq
@@ -191,10 +209,14 @@ def read(input_data=None):
         
         for queue in get_info("%s/queues/%s" % (base_url, vhost_name)):
             queue_name = urllib.quote(queue['name'],'')
-            collectd.debug("Found queue %s" % queue['name'])
-            queue_data = get_info("%s/queues/%s/%s" % (base_url,
-                     vhost_name, queue_name))
-            dispatch_queue_metrics(queue_data, vhost)
+            collectd.info("Found queue %s" % queue['name'])
+            if not want_to_ignore("queue", queue_name):
+                 queue_data = get_info("%s/queues/%s/%s" % (base_url,
+                                                           vhost_name, queue_name))
+                if queue_data is not None:
+                    dispatch_queue_metrics(queue_data, vhost)
+                else:
+                    collectd.warning("Cannot get data back from %s/%s queue" % (vhost_name, queue_name))
 
         for exchange in get_info("%s/exchanges/%s" % (base_url,
                 vhost_name)):

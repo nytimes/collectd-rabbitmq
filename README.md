@@ -28,6 +28,8 @@ This plugin supports a small amount of configuration options:
 
 * ```Port```: The port that the rabbitmq server is listening on. Defaults to ```15672```.
 
+* ```Ignore```: The queue to ignore, matching by Regex.  See example.
+
 Example Configuration
 =====================
 
@@ -44,6 +46,10 @@ LoadPlugin python
     Realm "RabbitMQ Management"
     Host "localhost"
     Port "15672"
+	<Ignore "queue">
+	  Regex "amq-gen-.*"
+	  Regex "tmp-.*"
+	</Ignore>
   </Module>
 </Plugin>
 ```
