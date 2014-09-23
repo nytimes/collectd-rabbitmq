@@ -211,7 +211,7 @@ def read(input_data=None):
             queue_name = urllib.quote(queue['name'],'')
             collectd.info("Found queue %s" % queue['name'])
             if not want_to_ignore("queue", queue_name):
-                 queue_data = get_info("%s/queues/%s/%s" % (base_url,
+                queue_data = get_info("%s/queues/%s/%s" % (base_url,
                                                            vhost_name, queue_name))
                 if queue_data is not None:
                     dispatch_queue_metrics(queue_data, vhost)
