@@ -53,7 +53,7 @@ def configure(config_values):
             type_rmq = config_value.values[0]
             PLUGIN_CONFIG['ignore'] = {type_rmq: []}
             for regex in config_value.children:
-                PLUGIN_CONFIG['ignore'][type_rmq].append(regex.values[0])
+                PLUGIN_CONFIG['ignore'][type_rmq].append(re.compile(regex.values[0]))
 
 def init():
     '''
@@ -170,8 +170,7 @@ def want_to_ignore(type_rmq, name):
     if 'ignore' in PLUGIN_CONFIG:
         if type_rmq in PLUGIN_CONFIG['ignore']:
             for regex in PLUGIN_CONFIG['ignore'][type_rmq]:
-                ignore_re = re.compile(regex)
-                match = ignore_re.match(name)
+                match = regex.match(name)
                 if match:
                     return True
     return False
