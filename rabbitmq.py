@@ -8,18 +8,17 @@ import json
 import re
 
 RABBIT_API_URL = "http://{host}:{port}/api/"
-QUEUE_MESSAGE_RATE_STATS = ['deliver_get', 'get', 'publish', 'redeliver']
-QUEUE_RATE_STATS = ['messages', 'messages_ready', 'messages_unacknowledged']
-QUEUE_STATS = ['memory', 'consumers']
 
-EXCHANGE_MESSAGE_RATE_STATS=['confirm', 'publish_in','publish_out',\
-                             'return_unroutable']
+QUEUE_MESSAGE_STATS = ['messages', 'messages_ready', 'messages_unacknowledged']
+QUEUE_STATS = ['memory', 'messages', 'consumers']
 
+MESSAGE_STATS = ['ack', 'publish', 'publish_in', 'publish_out', 'confirm', 'deliver', 'deliver_noack', 'get', 'get_noack', 'deliver_get', 'redeliver', 'return']
+MESSAGE_DETAIL = ['avg', 'avg_rate', 'rate', 'sample']
 NODE_STATS = ['disk_free', 'disk_free_limit', 'fd_total',\
               'fd_used', 'mem_limit', 'mem_used', \
               'proc_total', 'proc_used', 'processors', 'run_queue',\
               'sockets_total', 'sockets_used'
-             ] 
+             ]
 
 PLUGIN_CONFIG = {
     'username': 'guest',
@@ -76,94 +75,78 @@ def get_info(url):
         return None
     return json.load(info)
 
-def dispatch_values(values, plugin_instance, metric_type, metric_name):
+def dispatch_values(values, host, plugin, plugin_instance, metric_type,
+                    type_instance=None):
     '''
     dispatch metrics to collectd
+    Args:
+      values (tuple): the values to dispatch
+      host: (str): the name of the vhost
+      plugin (str): the name of the plugin. Should be queue/exchange
+      plugin_instance (str): the queue/exchange name
+      metric_type: (str): the name of metric
+      type_instance: Optional
     '''
 
-    collectd.debug("Dispatching vhost %s %s %s " % (plugin_instance,
-        metric_type, metric_name))
+    collectd.debug("Dispatching %s %s %s %s %s\n\t%s " % (host, plugin,
+	plugin_instance, metric_type, type_instance, values))
 
     metric = collectd.Values()
-    metric.plugin = "rabbitmq"
-    metric.plugin_instance = plugin_instance
+    if host:
+    	metric.host = host
+    metric.plugin = plugin
+    if plugin_instance:
+        metric.plugin_instance = plugin_instance
     metric.type = metric_type
-    metric.type_instance = metric_name
+    if type_instance:
+    	metric.type_instance = type_instance
     metric.values = values
     metric.dispatch()
 
-def get_details_rate(key, values):
-    '''
-    returns the value of the details section or 0
-    '''
+def dispatch_message_stats(data, vhost, plugin, plugin_instance):
+    if not data:
+        collectd.debug("No data for %s in vhost %s" % (plugin, vhost))
+        return
 
-    rate = 0
-    details = values.get("%s_details" % key, None)
-    if details:
-        rate = details.get('rate', 0)
-
-    return rate
+    for name in MESSAGE_STATS:
+    	dispatch_values((data.get(name,0),), vhost, plugin, plugin_instance, name)
 
 def dispatch_queue_metrics(queue, vhost):
     '''
     Dispatches queue metrics for queue in vhost
     '''
-    values = list()
-    vhost_name = vhost['name'].replace('/', 'default')
 
+    vhost_name = 'rabbitmq_%s' % (vhost['name'].replace('/', 'default'))
     for name in QUEUE_STATS:
-        values.append(queue.get(name, 0))
+        values= (queue.get(name, 0),)
+        dispatch_values(values, vhost_name, 'queues', queue['name'], 'rabbitmq_%s' % name)
 
-    message_stats = queue.get('message_stats', None)
-    if message_stats: 
-        for name in QUEUE_MESSAGE_RATE_STATS:
-            values.append(message_stats.get(name, 0))
-            values.append(get_details_rate(name, message_stats))
-    else:
-        # if we don't have message stats cause, we just add a bunch
-        # default data. In this case it is twice the size of the 
-        # message rate stats
+    for name in QUEUE_MESSAGE_STATS:
+        values= (queue.get(name, 0),)
+        dispatch_values(values, vhost_name, 'queues', queue['name'], 'rabbitmq_%s' % name)
 
-        values = values + [0] * 2 * len (QUEUE_MESSAGE_RATE_STATS)
-       
-    for name in QUEUE_RATE_STATS:
-        values.append(queue.get(name, 0))
-        values.append(get_details_rate(name, queue))      
+	details = queue.get("%s_details" % name, None)
+	values = list()
+	for detail in MESSAGE_DETAIL:
+		values.append (details.get(detail,0))
+	dispatch_values(values, vhost_name, 'queues', queue['name'], 'rabbitmq_details', name)
 
-    dispatch_values(values, vhost_name, 'queue', queue['name'])
-    
+    dispatch_message_stats(queue.get('message_stats',None), vhost_name, 'queues', queue['name'])
+
 def dispatch_exchange_metrics(exchange, vhost):
     '''
     Dispatches exchange metrics for exchange in vhost
     '''
-    values = list()
-    vhost_name = vhost['name'].replace('/', 'default')
-    collectd.info("Exchange %s" % exchange)
-    message_stats = exchange.get('message_stats', None)
-    if message_stats: 
-        for name in EXCHANGE_MESSAGE_RATE_STATS:
-            values.append(message_stats.get(name, 0))
-            values.append(get_details_rate(name, message_stats))
-    else:
-        # if we don't have message stats cause, we just add a bunch
-        # default data. In this case it is twice the size of the 
-        # message rate stats
-
-        values = values + [0] * 2 * len (EXCHANGE_MESSAGE_RATE_STATS)
-     
-
-    dispatch_values(values, vhost_name, 'exchange', exchange['name'])    
+    vhost_name = 'rabbitmq_%s' % vhost['name'].replace('/', 'default')
+    dispatch_message_stats(exchange.get('message_stats',None), vhost_name, 'exchanges', exchange['name'])
 
 def dispatch_node_metrics(node):
     '''
     Dispatches node metrics
     '''
-    values = list()
 
     for name in NODE_STATS:
-        values.append(node.get(name, 0)) or 0
-            
-    dispatch_values(values, 'rabbitmq', 'node', node['name'])    
+    	dispatch_values((node.get(name,0),), node['name'].split('@')[1], 'rabbitmq', None, name )
 
 
 def want_to_ignore(type_rmq, name):
@@ -181,7 +164,7 @@ def read(input_data=None):
     reads all metrics from rabbitmq
     '''
 
-    collectd.info("Reading data with input = %s" % (input_data))
+    collectd.debug("Reading data with input = %s" % (input_data))
     base_url = RABBIT_API_URL.format(host = PLUGIN_CONFIG['host'],
                 port = PLUGIN_CONFIG['port'])
 
@@ -196,37 +179,35 @@ def read(input_data=None):
     #First get all the nodes
     for node in get_info("%s/nodes"%(base_url)):
         dispatch_node_metrics(node)
-        #TODO
 
     #Then get all vhost
 
-    for vhost in get_info("%s/vhosts"%(base_url)):
+    for vhost in get_info("%s/vhosts" % (base_url)):
 
         vhost_name = urllib.quote(vhost['name'],'')
         collectd.debug("Found vhost %s" % vhost['name'])
-        
-        
+
         for queue in get_info("%s/queues/%s" % (base_url, vhost_name)):
             queue_name = urllib.quote(queue['name'],'')
-            collectd.info("Found queue %s" % queue['name'])
+            collectd.debug("Found queue %s" % queue['name'])
             if not want_to_ignore("queue", queue_name):
                 queue_data = get_info("%s/queues/%s/%s" % (base_url,
-                                                           vhost_name, queue_name))
+                                                           vhost_name,
+                                                           queue_name))
                 if queue_data is not None:
                     dispatch_queue_metrics(queue_data, vhost)
                 else:
-                    collectd.warning("Cannot get data back from %s/%s queue" % (vhost_name, queue_name))
+                    collectd.warning("Cannot get data back from %s/%s queue" %
+                                    (vhost_name, queue_name))
 
         for exchange in get_info("%s/exchanges/%s" % (base_url,
                 vhost_name)):
-            exchange_name = urllib.quote(exchange['name'],'') 
+            exchange_name = urllib.quote(exchange['name'],'')
             if exchange_name:
                 collectd.debug("Found exchange %s" % exchange['name'])
                 exchange_data = get_info("%s/exchanges/%s/%s" % (
                         base_url, vhost_name, exchange_name))
                 dispatch_exchange_metrics(exchange_data, vhost)
-
-
 
 def shutdown():
     '''
@@ -241,4 +222,3 @@ collectd.register_init(init)
 collectd.register_read(read)
 #collectd.register_write(write)
 collectd.register_shutdown(shutdown)
-
