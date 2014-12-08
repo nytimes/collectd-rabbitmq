@@ -22,7 +22,7 @@ NODE_STATS = ['disk_free', 'disk_free_limit', 'fd_total',\
 
 PLUGIN_CONFIG = {
     'username': 'guest',
-    'passowrd': 'guest',
+    'password': 'guest',
     'host': 'localhost',
     'port': 15672,
     'realm': 'RabbitMQ Management'
