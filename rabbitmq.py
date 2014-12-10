@@ -89,17 +89,17 @@ def dispatch_values(values, host, plugin, plugin_instance, metric_type,
     '''
 
     collectd.debug("Dispatching %s %s %s %s %s\n\t%s " % (host, plugin,
-	plugin_instance, metric_type, type_instance, values))
+    plugin_instance, metric_type, type_instance, values))
 
     metric = collectd.Values()
     if host:
-    	metric.host = host
+        metric.host = host
     metric.plugin = plugin
     if plugin_instance:
         metric.plugin_instance = plugin_instance
     metric.type = metric_type
     if type_instance:
-    	metric.type_instance = type_instance
+        metric.type_instance = type_instance
     metric.values = values
     metric.dispatch()
 
@@ -109,7 +109,7 @@ def dispatch_message_stats(data, vhost, plugin, plugin_instance):
         return
 
     for name in MESSAGE_STATS:
-    	dispatch_values((data.get(name,0),), vhost, plugin, plugin_instance, name)
+        dispatch_values((data.get(name,0),), vhost, plugin, plugin_instance, name)
 
 def dispatch_queue_metrics(queue, vhost):
     '''
@@ -125,11 +125,11 @@ def dispatch_queue_metrics(queue, vhost):
         values= (queue.get(name, 0),)
         dispatch_values(values, vhost_name, 'queues', queue['name'], 'rabbitmq_%s' % name)
 
-	details = queue.get("%s_details" % name, None)
-	values = list()
-	for detail in MESSAGE_DETAIL:
-		values.append (details.get(detail,0))
-	dispatch_values(values, vhost_name, 'queues', queue['name'], 'rabbitmq_details', name)
+    details = queue.get("%s_details" % name, None)
+    values = list()
+    for detail in MESSAGE_DETAIL:
+        values.append (details.get(detail,0))
+    dispatch_values(values, vhost_name, 'queues', queue['name'], 'rabbitmq_details', name)
 
     dispatch_message_stats(queue.get('message_stats',None), vhost_name, 'queues', queue['name'])
 
@@ -146,7 +146,7 @@ def dispatch_node_metrics(node):
     '''
 
     for name in NODE_STATS:
-    	dispatch_values((node.get(name,0),), node['name'].split('@')[1], 'rabbitmq', None, name )
+        dispatch_values((node.get(name,0),), node['name'].split('@')[1], 'rabbitmq', None, name )
 
 
 def want_to_ignore(type_rmq, name):
