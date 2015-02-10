@@ -40,22 +40,23 @@ def configure(config_values):
     for config_value in config_values.children:
         collectd.info("%s = %s" % (config_value.key,
                                    len(config_value.values) > 0))
-        if config_value.key == 'Username' and len(config_value.values) > 0:
-            PLUGIN_CONFIG['username'] = config_value.values[0]
-        elif config_value.key == 'Password' and len(config_value.values) > 0:
-            PLUGIN_CONFIG['password'] = config_value.values[0]
-        elif config_value.key == 'Host' and len(config_value.values) > 0:
-            PLUGIN_CONFIG['host'] = config_value.values[0]
-        elif config_value.key == 'Port' and len(config_value.values) > 0:
-            PLUGIN_CONFIG['port'] = config_value.values[0]
-        elif config_value.key == 'Realm' and len(config_value.values) > 0:
-            PLUGIN_CONFIG['realm'] = config_value.values[0]
-        elif config_value.key == 'Ignore' and len(config_value.values) > 0:
-            type_rmq = config_value.values[0]
-            PLUGIN_CONFIG['ignore'] = {type_rmq: []}
-            for regex in config_value.children:
-                PLUGIN_CONFIG['ignore'][type_rmq].append(
-                    re.compile(regex.values[0]))
+        if len(config_value.values) > 0:
+            if config_value.key == 'Username':
+                PLUGIN_CONFIG['username'] = config_value.values[0]
+            elif config_value.key == 'Password':
+                PLUGIN_CONFIG['password'] = config_value.values[0]
+            elif config_value.key == 'Host':
+                PLUGIN_CONFIG['host'] = config_value.values[0]
+            elif config_value.key == 'Port':
+                PLUGIN_CONFIG['port'] = config_value.values[0]
+            elif config_value.key == 'Realm':
+                PLUGIN_CONFIG['realm'] = config_value.values[0]
+            elif config_value.key == 'Ignore':
+                type_rmq = config_value.values[0]
+                PLUGIN_CONFIG['ignore'] = {type_rmq: []}
+                for regex in config_value.children:
+                    PLUGIN_CONFIG['ignore'][type_rmq].append(
+                        re.compile(regex.values[0]))
 
 
 def init():
@@ -130,7 +131,7 @@ def dispatch_queue_metrics(queue, vhost):
 
     vhost_name = 'rabbitmq_%s' % (vhost['name'].replace('/', 'default'))
     for name in QUEUE_STATS:
-        values = (queue.get(name, 0),)
+        values = list(queue.get(name, 0),)
         dispatch_values(values, vhost_name, 'queues', queue['name'],
                         'rabbitmq_%s' % name)
 
