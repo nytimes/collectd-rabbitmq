@@ -131,21 +131,21 @@ def dispatch_queue_metrics(queue, vhost):
 
     vhost_name = 'rabbitmq_%s' % (vhost['name'].replace('/', 'default'))
     for name in QUEUE_STATS:
-        values = list(queue.get(name, 0),)
+        values = list((queue.get(name, 0),))
         dispatch_values(values, vhost_name, 'queues', queue['name'],
                         'rabbitmq_%s' % name)
 
     for name in QUEUE_MESSAGE_STATS:
-        values = (queue.get(name, 0),)
+        values = list((queue.get(name, 0),))
         dispatch_values(values, vhost_name, 'queues', queue['name'],
                         'rabbitmq_%s' % name)
 
-    details = queue.get("%s_details" % name, None)
-    values = list()
-    for detail in MESSAGE_DETAIL:
-        values.append(details.get(detail,))
-    dispatch_values(values, vhost_name, 'queues', queue['name'],
-                    'rabbitmq_details', name)
+        details = queue.get("%s_details" % name, None)
+        values = list()
+        for detail in MESSAGE_DETAIL:
+            values.append(details.get(detail, 0))
+        dispatch_values(values, vhost_name, 'queues', queue['name'],
+                        'rabbitmq_details', name)
 
     dispatch_message_stats(queue.get('message_stats', None), vhost_name,
                            'queues', queue['name'])
