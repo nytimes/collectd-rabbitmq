@@ -9,13 +9,28 @@ import re
 
 RABBIT_API_URL = "http://{host}:{port}/api/"
 
-QUEUE_MESSAGE_STATS = ['messages', 'messages_ready', 'messages_unacknowledged']
-QUEUE_STATS = ['memory', 'messages', 'consumers']
+QUEUE_STATS = {
+   'consumers': { 'hasMsgStats' : False },
+   'memory': {'hasMsgStats': False },
+   'messages': { 'hasMsgStats': True },
+   'messages_ready': { 'hasMsgStats': True },
+   'messages_unacknowledged': { 'hasMsgStats': True }
+}
 
-MESSAGE_STATS = ['ack', 'publish', 'publish_in', 'publish_out', 'confirm',
-                 'deliver', 'deliver_noack', 'get', 'get_noack', 'deliver_get',
-                 'redeliver', 'return']
-MESSAGE_DETAIL = ['rate']
+MESSAGE_STATS = 'rate'
+
+QUEUE_MESSAGE_STATS = {
+   'ack': { 'hasMsgStats' : True },
+   'deliver': {'hasMsgStats': True },
+   'deliver_get': { 'hasMsgStats': True },
+   'redeliver': { 'hasMsgStats': True }
+}
+
+EXCHANGE_MESSAGE_STATS = {
+   'publish_in': { 'hasMsgStats' : True },
+   'publish_out': {'hasMsgStats': True }
+}
+
 NODE_STATS = ['disk_free', 'disk_free_limit', 'fd_total',
               'fd_used', 'mem_limit', 'mem_used',
               'proc_total', 'proc_used', 'processors', 'run_queue',
@@ -111,7 +126,7 @@ def dispatch_values(values, host, plugin, plugin_instance, metric_type,
     metric.dispatch()
 
 
-def dispatch_message_stats(data, vhost, plugin, plugin_instance):
+def dispatch_message_stats(data, vhost, plugin, plugin_instance, metrics):
     """
     Sends message stats to collectd.
     """
@@ -119,9 +134,16 @@ def dispatch_message_stats(data, vhost, plugin, plugin_instance):
         collectd.debug("No data for %s in vhost %s" % (plugin, vhost))
         return
 
-    for name in MESSAGE_STATS:
-        dispatch_values((data.get(name, 0),), vhost, plugin,
-                        plugin_instance, name)
+    for key, value in metrics.iteritems():
+        dispatch_values((data.get(key, 0),), vhost, plugin,
+                        plugin_instance, key)
+        if value['hasMsgStats']:
+            details = data.get("%s_details" % key, None)
+            if details is None:
+                continue
+            else:
+                dispatch_values((details.get(MESSAGE_STATS, 0),), vhost, plugin,
+                                plugin_instance, '%s_rate' % key)
 
 
 def dispatch_queue_metrics(queue, vhost):
@@ -130,25 +152,19 @@ def dispatch_queue_metrics(queue, vhost):
     '''
 
     vhost_name = 'rabbitmq_%s' % (vhost['name'].replace('/', 'default'))
-    for name in QUEUE_STATS:
-        values = list((queue.get(name, 0),))
-        dispatch_values(values, vhost_name, 'queues', queue['name'],
-                        'rabbitmq_%s' % name)
-
-    for name in QUEUE_MESSAGE_STATS:
-        values = list((queue.get(name, 0),))
-        dispatch_values(values, vhost_name, 'queues', queue['name'],
-                        'rabbitmq_%s' % name)
-
-        details = queue.get("%s_details" % name, None)
-        values = list()
-        for detail in MESSAGE_DETAIL:
-            values.append(details.get(detail, 0))
-        dispatch_values(values, vhost_name, 'queues', queue['name'],
-                        'rabbitmq_details', name)
+    for key, value in QUEUE_STATS.iteritems():
+        dispatch_values((queue.get(key, 0),), vhost_name, 'queues', queue['name'],
+                        'rabbitmq_%s' % key)
+        if value['hasMsgStats']:
+            details = queue.get("%s_details" % key, None)
+            if details is None:
+                continue
+            else:
+                dispatch_values((details.get(MESSAGE_STATS, 0),), vhost_name, 'queues', queue['name'],
+                               'rabbitmq_%s_rate' % key)
 
     dispatch_message_stats(queue.get('message_stats', None), vhost_name,
-                           'queues', queue['name'])
+                           'queues', queue['name'], QUEUE_MESSAGE_STATS)
 
 
 def dispatch_exchange_metrics(exchange, vhost):
@@ -157,7 +173,7 @@ def dispatch_exchange_metrics(exchange, vhost):
     '''
     vhost_name = 'rabbitmq_%s' % vhost['name'].replace('/', 'default')
     dispatch_message_stats(exchange.get('message_stats', None), vhost_name,
-                           'exchanges', exchange['name'])
+                           'exchanges', exchange['name'], EXCHANGE_MESSAGE_STATS)
 
 
 def dispatch_node_metrics(node):
