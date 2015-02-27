@@ -11,22 +11,25 @@ run_queue       value:GAUGE:0:U
 sockets_total   value:GAUGE:0:U
 sockets_used    value:GAUGE:0:U
 
-rabbitmq_memory value:GAUGE:0:U
-rabbitmq_messages value:GAUGE:0:U
-rabbitmq_messages_ready value:GAUGE:0:U
-rabbitmq_messages_unacknowledged value:GAUGE:0:U
-rabbitmq_consumers value:GAUGE:0:U
-rabbitmq_details avg:GAUGE:0:U avg_rate:GAUGE:0:U rate:GAUGE:0:U samples:GAUGE:0:U
+rabbitmq_consumers			value:GAUGE:0:U
+rabbitmq_memory				value:GAUGE:0:U
+rabbitmq_messages			value:GAUGE:0:U
+rabbitmq_messages_rate			value:GAUGE:0:U
+rabbitmq_messages_ready			value:GAUGE:0:U
+rabbitmq_messages_ready_rate		value:GAUGE:0:U
+rabbitmq_messages_unacknowledged	value:GAUGE:0:U
+rabbitmq_messages_unacknowledged_rate	value:GAUGE:0:U
 
-ack           value:GAUGE:0:U
-publish       value:GAUGE:0:U
-publish_in    value:GAUGE:0:U
-publish_out   value:GAUGE:0:U
-confirm       value:GAUGE:0:U
-deliver       value:GAUGE:0:U
-deliver_noack value:GAUGE:0:U
-get           value:GAUGE:0:U
-get_noack     value:GAUGE:0:U
-deliver_get   value:GAUGE:0:U
-redeliver     value:GAUGE:0:U
-return        value:GAUGE:0:U
+ack			value:GAUGE:0:U
+ack_rate		value:GAUGE:0:U
+deliver			value:GAUGE:0:U
+deliver_get		value:GAUGE:0:U
+deliver_get_rate	value:GAUGE:0:U
+deliver_rate		value:GAUGE:0:U
+publish_in		value:GAUGE:0:U
+publish_in_rate		value:GAUGE:0:U
+publish_out		value:GAUGE:0:U
+publish_out_rate	value:GAUGE:0:U
+redeliver		value:GAUGE:0:U
+redeliver_rate		value:GAUGE:0:U
+

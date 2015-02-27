@@ -88,27 +88,20 @@ For each queue in each vhost the following statistics are gathered:
 > NOTE: The ```/``` vhost name is sent as ```default```
 
 * message_stats
+    * ack
+    * ack_rate
+    * deliver
     * deliver_get
-    * deliver_get_details 
-    	* rate 
-    * get
-    * get_details
-        * rate
-    * publish
-    * publish_details
-        * rate
-    * redeliver  
-    * redeliver_details
-        * rate
+    * deliver_get_rate
+    * deliver_rate
+    * redeliver
+    * redeliver_rate
 * messages
-* messages_details 
-    * rate
+* messages_rate
 * messages_ready
-* messages_ready_details
-    * rate
+* messages_ready_rate
 * messages_unacknowledged
-* messages_unacknowledged_details
-  * rate
+* messages_unacknowledged_rate
 * memory
 * consumers
 
@@ -118,30 +111,11 @@ Exchanges
 For each exchange in each vhost the following statistics are gathered: 
 > NOTE: The ```/``` vhost name is sent as ```default```
 
-* disk_free 
-
-* disk_free_limit 
-
-* fd_total
-
-* fd_used
-
-* mem_limit 
-
-* mem_used
-
-* proc_total
-
-* proc_used 
-
-* processors
-
-* run_queue
-
-* sockets_total
-
-* sockets_used
-
+* message_stats
+    * publish_in
+    * publish_in_rate
+    * publish_out
+    * publish_out_rate
 
 Developing
 ==========
