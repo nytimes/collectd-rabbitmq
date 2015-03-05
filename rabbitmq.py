@@ -141,6 +141,8 @@ def dispatch_queue_metrics(queue, vhost):
                         'rabbitmq_%s' % name)
 
         details = queue.get("%s_details" % name, None)
+        if not details:
+            continue
         values = list()
         for detail in MESSAGE_DETAIL:
             values.append(details.get(detail, 0))
