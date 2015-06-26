@@ -6,6 +6,7 @@ import urllib2
 import urllib
 import json
 import re
+import socket
 
 RABBIT_API_URL = "http://{host}:{port}/api/"
 
@@ -26,7 +27,8 @@ PLUGIN_CONFIG = {
     'password': 'guest',
     'host': 'localhost',
     'port': 15672,
-    'realm': 'RabbitMQ Management'
+    'realm': 'RabbitMQ Management',
+    'vhost_prefix': ''
 }
 
 
@@ -51,6 +53,9 @@ def configure(config_values):
                 PLUGIN_CONFIG['port'] = config_value.values[0]
             elif config_value.key == 'Realm':
                 PLUGIN_CONFIG['realm'] = config_value.values[0]
+            elif config_value.key == 'PrefixVhost':
+                if config_value.values[0] == True:
+                    PLUGIN_CONFIG['vhost_prefix'] = socket.gethostname().split('.')[0] + '_'
             elif config_value.key == 'Ignore':
                 type_rmq = config_value.values[0]
                 PLUGIN_CONFIG['ignore'] = {type_rmq: []}
@@ -129,7 +134,7 @@ def dispatch_queue_metrics(queue, vhost):
     Dispatches queue metrics for queue in vhost
     '''
 
-    vhost_name = 'rabbitmq_%s' % (vhost['name'].replace('/', 'default'))
+    vhost_name = '%srabbitmq_%s' % (PLUGIN_CONFIG['vhost_prefix'], vhost['name'].replace('/', 'default'))
     for name in QUEUE_STATS:
         values = list((queue.get(name, 0),))
         dispatch_values(values, vhost_name, 'queues', queue['name'],
@@ -157,7 +162,7 @@ def dispatch_exchange_metrics(exchange, vhost):
     '''
     Dispatches exchange metrics for exchange in vhost
     '''
-    vhost_name = 'rabbitmq_%s' % vhost['name'].replace('/', 'default')
+    vhost_name = '%srabbitmq_%s' % (PLUGIN_CONFIG['vhost_prefix'], vhost['name'].replace('/', 'default'))
     dispatch_message_stats(exchange.get('message_stats', None), vhost_name,
                            'exchanges', exchange['name'])
 
