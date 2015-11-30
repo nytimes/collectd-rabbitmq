@@ -53,7 +53,7 @@ def configure(config_values):
                 PLUGIN_CONFIG['realm'] = config_value.values[0]
             elif config_value.key == 'Ignore':
                 type_rmq = config_value.values[0]
-                PLUGIN_CONFIG['ignore'] = {type_rmq: []}
+                PLUGIN_CONFIG.setdefault('ignore', {})[type_rmq] = []
                 for regex in config_value.children:
                     PLUGIN_CONFIG['ignore'][type_rmq].append(
                         re.compile(regex.values[0]))
@@ -231,9 +231,10 @@ def read(input_data=None):
             exchange_name = urllib.quote(exchange['name'], '')
             if exchange_name:
                 collectd.debug("Found exchange %s" % exchange['name'])
-                exchange_data = get_info("%s/exchanges/%s/%s" % (
-                                         base_url, vhost_name, exchange_name))
-                dispatch_exchange_metrics(exchange_data, vhost)
+                if not want_to_ignore("exchange", queue_name):
+                    exchange_data = get_info("%s/exchanges/%s/%s" % (
+                                             base_url, vhost_name, exchange_name))
+                    dispatch_exchange_metrics(exchange_data, vhost)
 
 
 def shutdown():
