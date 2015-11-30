@@ -124,12 +124,23 @@ def dispatch_message_stats(data, vhost, plugin, plugin_instance):
                         plugin_instance, name)
 
 
+def generate_vhost_name(vhost):
+    name = vhost['name']
+    if name == '/':
+        name = 'default'
+    else:
+        name = re.sub(r'^/', 'slash_', name)
+        name = re.sub(r'/$', '_slash', name)
+        name = re.sub(r'/', '_slash_', name)
+    return 'rabbitmq_%s' % name
+
+
 def dispatch_queue_metrics(queue, vhost):
     '''
     Dispatches queue metrics for queue in vhost
     '''
 
-    vhost_name = 'rabbitmq_%s' % (vhost['name'].replace('/', 'default'))
+    vhost_name = generate_vhost_name(vhost)
     for name in QUEUE_STATS:
         values = list((queue.get(name, 0),))
         dispatch_values(values, vhost_name, 'queues', queue['name'],
@@ -157,7 +168,7 @@ def dispatch_exchange_metrics(exchange, vhost):
     '''
     Dispatches exchange metrics for exchange in vhost
     '''
-    vhost_name = 'rabbitmq_%s' % vhost['name'].replace('/', 'default')
+    vhost_name = generate_vhost_name(vhost)
     dispatch_message_stats(exchange.get('message_stats', None), vhost_name,
                            'exchanges', exchange['name'])
 
