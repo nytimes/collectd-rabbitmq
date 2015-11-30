@@ -125,6 +125,9 @@ def dispatch_message_stats(data, vhost, plugin, plugin_instance):
 
 
 def generate_vhost_name(vhost):
+    '''
+    Generate a "normalized" vhost name without /
+    '''
     name = vhost['name']
     if name == '/':
         name = 'default'
