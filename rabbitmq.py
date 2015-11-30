@@ -108,6 +108,9 @@ def dispatch_values(values, host, plugin, plugin_instance, metric_type,
     if type_instance:
         metric.type_instance = type_instance
     metric.values = values
+    # Tiny hack to fix bug with write_http plugin in Collectd versions < 5.5.
+    # See https://github.com/phobos182/collectd-elasticsearch/issues/15 for details
+    metric.meta = {'0': True}
     metric.dispatch()
 
 
