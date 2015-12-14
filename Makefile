@@ -55,21 +55,21 @@ test-all:
 	tox
 
 coverage:
-	coverage run --source collectd_rabbitmq setup.py test
+	coverage run --source=collectd_rabbitmq setup.py test
 	coverage report -m
 	coverage html
-	$(BROWSER) htmlcov/index.html
+	#$(BROWSER) htmlcov/index.html
 
 docs:
-	rm -f docs/collectd-rabbitmq.md
-	rm -f docs/modules.md
+	rm -f docs/collectd-rabbitmq.rst
+	rm -f docs/modules.rst
 	sphinx-apidoc -o docs/ collectd_rabbitmq
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	#$(BROWSER) docs/_build/html/index.html
 
 servedocs: docs
-	watchmedo shell-command -p '*.md' -c '$(MAKE) -C docs html' -R -D .
+	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
 
 release: clean
 	python setup.py sdist upload

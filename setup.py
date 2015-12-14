@@ -16,18 +16,16 @@
 # limitations under the License.
 
 
-from setuptools.command.test import test as TestCommand
-
 try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
 
 
-with open('README.md') as readme_file:
+with open('README.rst') as readme_file:
     readme = readme_file.read()
 
-with open('HISTORY.md') as history_file:
+with open('HISTORY.rst') as history_file:
     history = history_file.read().replace('.. :changelog:', '')
 
 requirements = [
@@ -38,27 +36,6 @@ test_requirements = [
     # TODO: put package test requirements here
 ]
 
-
-class Tox(TestCommand):
-    user_options = [('tox-args=', 'a', "Arguments to pass to tox")]
-
-    def initialize_options(self):
-        TestCommand.initialize_options(self)
-        self.tox_args = None
-
-    def finalize_options(self):
-        TestCommand.finalize_options(self)
-        self.test_args = []
-        self.test_suite = True
-
-    def run_tests(self):
-        # import here, cause outside the eggs aren't loaded
-        import shlex
-        import tox
-        args = self.tox_args
-        if args:
-            args = shlex.split(self.tox_args)
-        tox.cmdline(args=args)
 
 setup(
     name='collectd-rabbitmq',
@@ -87,6 +64,5 @@ setup(
         'Programming Language :: Python :: 2.7',
     ],
     test_suite='tests',
-    tests_require=['tox'] + test_requirements,
-    cmdclass={'test': Tox}
+    tests_require=test_requirements,
 )

@@ -4,15 +4,14 @@
 language: python
 
 env:
-  - TOXENV=py35
-  - TOXENV=py34
-  - TOXENV=py33
   - TOXENV=py27
-  - TOXENV=py26
-  - TOXENV=pypy
+  - TOXENV=pep8
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
-install: pip install -U tox
+install: 
+  - pip install -r requirements.txt
+  - pip install -U tox twine wheel
+  - pip install coveralls
 
 # command to run tests, e.g. python setup.py test
 script: tox
@@ -24,8 +23,12 @@ deploy:
   distributions: sdist bdist_wheel
   user: jimbydamonk
   password:
-    secure: PLEASE_REPLACE_ME
+    secure: dg3r6eCYiXOLxIsGFtqV4stvJnqgQ3bt2JDe2NUFamuk6sXVkEznFtd6F3nEJGsw97Dod5aZjLAgZWQXRwQ5Lm3ckwMcIEhYGpeNOgiG5sNtck8etRTKEOnc0w7/6G5LfZfCmRL72NRUikXSBL4YpRROsiLGXu6tQib1zrJq6hqC1OpWvcHlXZ8L5opQkgBJuqwt4MG/2ZX5YbIjsuMJLrk2D5AeyRkHKQxjboAFoTJh7+1PelcDTzbTP07d1lrKmy5uNFHwbt9udkh/JRDg8bfRr/wv13vykhI3aREdlYREj78VaY6uMkYcY11cnvtkp31+AILX4kU8/OXag/45hxzB9IM501zhhZ6CaOeyP1QR+fI2qnSFuAo7ND4OE9VQDApaXBAtD9LobmE9KzfcNz0Xm/gP4wrV7NIsKjVZA+/TbtSutBTowj0UggDDlX13RiUmNiB/SgRx6aLyS58KyGjTbG+opkeUDuS8ig+HVFysEiupLWwjUtS//MxEZWq5wh93xkQsM45Miq8yCTEN/+hq0VrAwkDmgQRdXQqIY8sSIvW28mkzDL+z/8tK+95N8AUa1fdq4pxHL7NvU5BXb62eq3R0rWdff/OEPEwfl4WSrQmMaiS9DoVe5T2sEnMS4Y/sByH1MgcnjmcPhztmj8yvWQ0VWgy82uTR1Bfwf1c=
   on:
     tags: true
+    branch: master
     repo: NYTimes/collectd-rabbitmq
     condition: $TOXENV == py27
+
+after_success:
+  - coveralls

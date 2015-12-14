@@ -17,11 +17,13 @@ collectd-rabbitmq
 
 * Free software: Apache license
 * Documentation: https://collectd-rabbitmq.readthedocs.org.
+* For the older single file version see https://github.com/NYTimes/collectd-rabbitmq/tree/0.1.0
 
 Features
 --------
 
-* TODO
+* Support queue, exchange, and node stats,
+
 
 Credits
 ---------
