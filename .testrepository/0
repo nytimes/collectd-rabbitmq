@@ -1,0 +1,287 @@
+time: 2015-12-12 18:53:56.168818Z
+tags: worker-1
+test: tests.test_collectd_plugin.TestCollectdPluginDispatch.test_dispatch_non_list
+time: 2015-12-12 18:53:56.172014Z
+successful: tests.test_collectd_plugin.TestCollectdPluginDispatch.test_dispatch_non_list [ multipart
+]
+tags: -worker-1
+time: 2015-12-12 18:53:56.172331Z
+tags: worker-1
+test: tests.test_collectd_plugin.TestCollectdPluginExchanges.test_dispatch_exchanges
+time: 2015-12-12 18:53:56.187216Z
+successful: tests.test_collectd_plugin.TestCollectdPluginExchanges.test_dispatch_exchanges [ multipart
+]
+tags: -worker-1
+time: 2015-12-12 18:53:56.187506Z
+tags: worker-1
+test: tests.test_collectd_plugin.TestCollectdPluginNodes.test_read
+time: 2015-12-12 18:53:56.193180Z
+successful: tests.test_collectd_plugin.TestCollectdPluginNodes.test_read [ multipart
+]
+tags: -worker-1
+time: 2015-12-12 18:53:56.189214Z
+tags: worker-3
+test: tests.test_collectd_plugin.TestCollectdPluginCallbacks.test_read
+time: 2015-12-12 18:53:56.193061Z
+successful: tests.test_collectd_plugin.TestCollectdPluginCallbacks.test_read [ multipart
+]
+tags: -worker-3
+time: 2015-12-12 18:53:56.190895Z
+tags: worker-2
+test: tests.test_collectd_plugin.TestCollectdPluginDispatch.test_dispatch
+time: 2015-12-12 18:53:56.193651Z
+successful: tests.test_collectd_plugin.TestCollectdPluginDispatch.test_dispatch [ multipart
+]
+tags: -worker-2
+time: 2015-12-12 18:53:56.193981Z
+tags: worker-2
+test: tests.test_collectd_plugin.TestCollectdPluginDispatch.test_dispatch_meta
+time: 2015-12-12 18:53:56.195130Z
+successful: tests.test_collectd_plugin.TestCollectdPluginDispatch.test_dispatch_meta [ multipart
+]
+tags: -worker-2
+time: 2015-12-12 18:53:56.195538Z
+tags: worker-2
+test: tests.test_collectd_plugin.TestCollectdPluginDispatchMessageStats.test_dispatch_no_data
+time: 2015-12-12 18:53:56.196039Z
+successful: tests.test_collectd_plugin.TestCollectdPluginDispatchMessageStats.test_dispatch_no_data [ multipart
+]
+tags: -worker-2
+time: 2015-12-12 18:53:56.193848Z
+tags: worker-3
+test: tests.test_collectd_plugin.TestCollectdPluginRead.test_read
+time: 2015-12-12 18:53:56.198333Z
+successful: tests.test_collectd_plugin.TestCollectdPluginRead.test_read [ multipart
+]
+tags: -worker-3
+time: 2015-12-12 18:53:56.196324Z
+tags: worker-2
+test: tests.test_collectd_plugin.TestCollectdPluginVhost.test_generate_vhost_default
+time: 2015-12-12 18:53:56.197391Z
+successful: tests.test_collectd_plugin.TestCollectdPluginVhost.test_generate_vhost_default [ multipart
+]
+tags: -worker-2
+time: 2015-12-12 18:53:56.198698Z
+tags: worker-3
+test: tests.test_collectd_plugin.TestCollectdPluginVhost.test_generate_vhost_end_slash
+time: 2015-12-12 18:53:56.200115Z
+successful: tests.test_collectd_plugin.TestCollectdPluginVhost.test_generate_vhost_end_slash [ multipart
+]
+tags: -worker-3
+time: 2015-12-12 18:53:56.211025Z
+tags: worker-0
+test: tests.test_collectd_plugin.TestCollectdPluginCallbacks.test_read_no_plugin
+time: 2015-12-12 18:53:56.212473Z
+successful: tests.test_collectd_plugin.TestCollectdPluginCallbacks.test_read_no_plugin [ multipart
+]
+tags: -worker-0
+time: 2015-12-12 18:53:56.197979Z
+tags: worker-2
+test: tests.test_rabbit.TestGetInfo.test_get_info
+time: 2015-12-12 18:53:56.213089Z
+successful: tests.test_rabbit.TestGetInfo.test_get_info [ multipart
+]
+tags: -worker-2
+time: 2015-12-12 18:53:56.212792Z
+tags: worker-0
+test: tests.test_collectd_plugin.TestCollectdPluginConfig.test_config
+time: 2015-12-12 18:53:56.213752Z
+successful: tests.test_collectd_plugin.TestCollectdPluginConfig.test_config [ multipart
+]
+tags: -worker-0
+time: 2015-12-12 18:53:56.214131Z
+tags: worker-0
+test: tests.test_collectd_plugin.TestCollectdPluginDispatch.test_dispatch_type_instance
+time: 2015-12-12 18:53:56.215077Z
+successful: tests.test_collectd_plugin.TestCollectdPluginDispatch.test_dispatch_type_instance [ multipart
+]
+tags: -worker-0
+time: 2015-12-12 18:53:56.200621Z
+tags: worker-3
+test: tests.test_rabbit.TestGetInfo.test_get_info_url_bad_json
+time: 2015-12-12 18:53:56.215291Z
+successful: tests.test_rabbit.TestGetInfo.test_get_info_url_bad_json [ multipart
+]
+tags: -worker-3
+time: 2015-12-12 18:53:56.215619Z
+tags: worker-3
+test: tests.test_rabbit.TestGetInfo.test_get_info_url_exception
+time: 2015-12-12 18:53:56.218725Z
+successful: tests.test_rabbit.TestGetInfo.test_get_info_url_exception [ multipart
+]
+tags: -worker-3
+time: 2015-12-12 18:53:56.218995Z
+tags: worker-3
+test: tests.test_rabbit.TestGetStats.test_get_stats_bad_type
+time: 2015-12-12 18:53:56.219316Z
+successful: tests.test_rabbit.TestGetStats.test_get_stats_bad_type [ multipart
+]
+tags: -worker-3
+time: 2015-12-12 18:53:56.213341Z
+tags: worker-2
+test: tests.test_rabbit.TestGetInfo.test_get_info_bad_url
+time: 2015-12-12 18:53:56.218841Z
+successful: tests.test_rabbit.TestGetInfo.test_get_info_bad_url [ multipart
+]
+tags: -worker-2
+time: 2015-12-12 18:53:56.221202Z
+tags: worker-2
+test: tests.test_rabbit.TestQueues.test_get_queue_stats
+time: 2015-12-12 18:53:56.224775Z
+successful: tests.test_rabbit.TestQueues.test_get_queue_stats [ multipart
+]
+tags: -worker-2
+time: 2015-12-12 18:53:56.220299Z
+tags: worker-3
+test: tests.test_rabbit.TestIgnoredExchanges.test_get_queue
+time: 2015-12-12 18:53:56.224132Z
+successful: tests.test_rabbit.TestIgnoredExchanges.test_get_queue [ multipart
+]
+tags: -worker-3
+time: 2015-12-12 18:53:56.226020Z
+tags: worker-2
+test: tests.test_utils.TestConfig.test_config_ignored
+time: 2015-12-12 18:53:56.226768Z
+successful: tests.test_utils.TestConfig.test_config_ignored [ multipart
+]
+tags: -worker-2
+time: 2015-12-12 18:53:56.227235Z
+tags: worker-2
+test: tests.test_utils.TestFilterDictionary.test_filter_dictionary
+time: 2015-12-12 18:53:56.227386Z
+successful: tests.test_utils.TestFilterDictionary.test_filter_dictionary [ multipart
+]
+tags: -worker-2
+time: 2015-12-12 18:53:56.227541Z
+tags: worker-2
+test: tests.test_utils.TestFilterDictionary.test_filter_no_keys
+time: 2015-12-12 18:53:56.227671Z
+successful: tests.test_utils.TestFilterDictionary.test_filter_no_keys [ multipart
+]
+tags: -worker-2
+time: 2015-12-12 18:53:56.215765Z
+tags: worker-0
+test: tests.test_collectd_plugin.TestCollectdPluginRead.test_read_no_vhosts
+time: 2015-12-12 18:53:56.238891Z
+successful: tests.test_collectd_plugin.TestCollectdPluginRead.test_read_no_vhosts [ multipart
+]
+tags: -worker-0
+time: 2015-12-12 18:53:56.239951Z
+tags: worker-0
+test: tests.test_collectd_plugin.TestCollectdPluginVhost.test_generate_vhost
+time: 2015-12-12 18:53:56.240527Z
+successful: tests.test_collectd_plugin.TestCollectdPluginVhost.test_generate_vhost [ multipart
+]
+tags: -worker-0
+time: 2015-12-12 18:53:56.241069Z
+tags: worker-0
+test: tests.test_collectd_plugin.TestCollectdPluginVhost.test_generate_vhost_empty
+time: 2015-12-12 18:53:56.241422Z
+successful: tests.test_collectd_plugin.TestCollectdPluginVhost.test_generate_vhost_empty [ multipart
+]
+tags: -worker-0
+time: 2015-12-12 18:53:56.241605Z
+tags: worker-0
+test: tests.test_collectd_plugin.TestCollectdPluginVhost.test_generate_vhost_start_slash
+time: 2015-12-12 18:53:56.242738Z
+successful: tests.test_collectd_plugin.TestCollectdPluginVhost.test_generate_vhost_start_slash [ multipart
+]
+tags: -worker-0
+time: 2015-12-12 18:53:56.227545Z
+tags: worker-3
+test: tests.test_rabbit.TestIgnoredQueues.test_get_filterd_queue_stats
+time: 2015-12-12 18:53:56.243881Z
+successful: tests.test_rabbit.TestIgnoredQueues.test_get_filterd_queue_stats [ multipart
+]
+tags: -worker-3
+time: 2015-12-12 18:53:56.243040Z
+tags: worker-0
+test: tests.test_rabbit.TestExchanges.test_get_exchange_stats
+time: 2015-12-12 18:53:56.245573Z
+successful: tests.test_rabbit.TestExchanges.test_get_exchange_stats [ multipart
+]
+tags: -worker-0
+time: 2015-12-12 18:53:56.244806Z
+tags: worker-3
+test: tests.test_rabbit.TestVhost.test_vhots_names
+time: 2015-12-12 18:53:56.248347Z
+successful: tests.test_rabbit.TestVhost.test_vhots_names [ multipart
+]
+tags: -worker-3
+time: 2015-12-12 18:53:56.249421Z
+tags: worker-3
+test: tests.test_utils.TestConnectionInfo.test_url_setter
+time: 2015-12-12 18:53:56.249727Z
+successful: tests.test_utils.TestConnectionInfo.test_url_setter [ multipart
+]
+tags: -worker-3
+time: 2015-12-12 18:53:56.245877Z
+tags: worker-0
+test: tests.test_rabbit.TestGetInfo.test_get_info_httpd_exception
+time: 2015-12-12 18:53:56.251226Z
+successful: tests.test_rabbit.TestGetInfo.test_get_info_httpd_exception [ multipart
+]
+tags: -worker-0
+time: 2015-12-12 18:53:56.193446Z
+tags: worker-1
+test: tests.test_collectd_plugin.TestCollectdPluginQueues.test_dispatch_queues
+time: 2015-12-12 18:53:56.238359Z
+successful: tests.test_collectd_plugin.TestCollectdPluginQueues.test_dispatch_queues [ multipart
+]
+tags: -worker-1
+time: 2015-12-12 18:53:56.251562Z
+tags: worker-0
+test: tests.test_rabbit.TestIgnoredQueues.test_get_exchanges
+time: 2015-12-12 18:53:56.254868Z
+successful: tests.test_rabbit.TestIgnoredQueues.test_get_exchanges [ multipart
+]
+tags: -worker-0
+time: 2015-12-12 18:53:56.255290Z
+tags: worker-0
+test: tests.test_utils.TestConfig.test_config_not_ignored
+time: 2015-12-12 18:53:56.255622Z
+successful: tests.test_utils.TestConfig.test_config_not_ignored [ multipart
+]
+tags: -worker-0
+time: 2015-12-12 18:53:56.256873Z
+tags: worker-1
+test: tests.test_rabbit.TestExchanges.test_get_all_exchange_stats
+time: 2015-12-12 18:53:56.262088Z
+successful: tests.test_rabbit.TestExchanges.test_get_all_exchange_stats [ multipart
+]
+tags: -worker-1
+time: 2015-12-12 18:53:56.262487Z
+tags: worker-1
+test: tests.test_rabbit.TestIgnoredExchanges.test_get_filterd_exchange_stats
+time: 2015-12-12 18:53:56.273723Z
+successful: tests.test_rabbit.TestIgnoredExchanges.test_get_filterd_exchange_stats [ multipart
+]
+tags: -worker-1
+time: 2015-12-12 18:53:56.274040Z
+tags: worker-1
+test: tests.test_rabbit.TestQueues.test_get_all_queue_stats
+time: 2015-12-12 18:53:56.277764Z
+successful: tests.test_rabbit.TestQueues.test_get_all_queue_stats [ multipart
+]
+tags: -worker-1
+time: 2015-12-12 18:53:56.278196Z
+tags: worker-1
+test: tests.test_rabbit.TestVhost.test_vhots
+time: 2015-12-12 18:53:56.279650Z
+successful: tests.test_rabbit.TestVhost.test_vhots [ multipart
+]
+tags: -worker-1
+time: 2015-12-12 18:53:56.280164Z
+tags: worker-1
+test: tests.test_utils.TestConfig.test_config_url
+time: 2015-12-12 18:53:56.280339Z
+successful: tests.test_utils.TestConfig.test_config_url [ multipart
+]
+tags: -worker-1
+time: 2015-12-12 18:53:56.280622Z
+tags: worker-1
+test: tests.test_utils.TestFilterDictionary.test_filter_no_dictionary
+time: 2015-12-12 18:53:56.280761Z
+successful: tests.test_utils.TestFilterDictionary.test_filter_no_dictionary [ multipart
+]
+tags: -worker-1
