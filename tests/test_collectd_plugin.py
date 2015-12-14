@@ -59,6 +59,15 @@ class TestCollectdPluginCallbacks(unittest.TestCase):
         collectd_plugin.read()
         self.assertFalse(mock_read.called)
 
+    @patch.object(collectd_plugin.CollectdPlugin, '__new__')
+    def test_init_plugin(self, mock_plugin):
+        """
+        Asserts that init create the plugin.
+        """
+        collectd_plugin.init()
+        self.assertTrue(mock_plugin.called)
+        self.assertIsNotNone(collectd_plugin.PLUGIN)
+
 
 class BaseTestCollectdPlugin(unittest.TestCase):
     """
@@ -420,10 +429,21 @@ class TestCollectdPluginDispatchMessageStats(BaseTestCollectdPlugin):
     """
     def test_dispatch_no_data(self):
         """
-        Assert that no data is dispatched.
+        Assert that empty data is not dispatched.
         """
         self.collectd_plugin.dispatch_values = Mock()
         self.collectd_plugin.dispatch_message_stats(None, 'test_vhost',
+                                                    'test_plugin',
+                                                    'type_plugin_instance')
+        self.assertFalse(self.collectd_plugin.dispatch_values.called)
+
+    def test_dispatch_no_message_stats(self):
+        """
+        Assert that data without message_stats are not dispatched.
+        """
+        self.collectd_plugin.dispatch_values = Mock()
+        self.collectd_plugin.dispatch_message_stats(dict(test=Mock),
+                                                    'test_vhost',
                                                     'test_plugin',
                                                     'type_plugin_instance')
         self.assertFalse(self.collectd_plugin.dispatch_values.called)
