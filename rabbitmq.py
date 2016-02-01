@@ -248,7 +248,7 @@ def read(input_data=None):
             exchange_name = urllib.quote(exchange['name'], '')
             if exchange_name:
                 collectd.debug("Found exchange %s" % exchange['name'])
-                if not want_to_ignore("exchange", queue_name):
+                if not want_to_ignore("exchange", exchange_name):
                     exchange_data = get_info("%s/exchanges/%s/%s" % (
                                              base_url, vhost_name, exchange_name))
                     dispatch_exchange_metrics(exchange_data, vhost)
