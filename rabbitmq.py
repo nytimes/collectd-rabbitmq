@@ -7,7 +7,7 @@ import urllib
 import json
 import re
 
-RABBIT_API_URL = "http://{host}:{port}/api/"
+RABBIT_API_URL = "{scheme}://{host}:{port}/api/"
 
 QUEUE_MESSAGE_STATS = ['messages', 'messages_ready', 'messages_unacknowledged']
 QUEUE_STATS = ['memory', 'messages', 'consumers']
@@ -24,6 +24,7 @@ NODE_STATS = ['disk_free', 'disk_free_limit', 'fd_total',
 PLUGIN_CONFIG = {
     'username': 'guest',
     'password': 'guest',
+    'scheme': 'http',
     'host': 'localhost',
     'port': 15672,
     'realm': 'RabbitMQ Management'
@@ -45,6 +46,8 @@ def configure(config_values):
                 PLUGIN_CONFIG['username'] = config_value.values[0]
             elif config_value.key == 'Password':
                 PLUGIN_CONFIG['password'] = config_value.values[0]
+            elif config_value.key == 'Scheme':
+                PLUGIN_CONFIG['scheme'] = config_value.values[0]
             elif config_value.key == 'Host':
                 PLUGIN_CONFIG['host'] = config_value.values[0]
             elif config_value.key == 'Port':
@@ -208,7 +211,8 @@ def read(input_data=None):
     '''
 
     collectd.debug("Reading data with input = %s" % (input_data))
-    base_url = RABBIT_API_URL.format(host=PLUGIN_CONFIG['host'],
+    base_url = RABBIT_API_URL.format(scheme=PLUGIN_CONFIG['scheme'],
+                                     host=PLUGIN_CONFIG['host'],
                                      port=PLUGIN_CONFIG['port'])
 
     auth_handler = urllib2.HTTPBasicAuthHandler()
