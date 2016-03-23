@@ -65,5 +65,5 @@ setup(
     ],
     test_suite='tests',
     tests_require=test_requirements,
-    data_files=[('/usr/share/collect-rabbitmq/', 'config/types.db.custom')],
+    data_files=[('/usr/share/collect-rabbitmq/', ['config/types.db.custom'])],
 )
