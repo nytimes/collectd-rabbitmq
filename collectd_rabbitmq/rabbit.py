@@ -28,6 +28,7 @@ class RabbitMQStats(object):
     """
         Class to interface with the RabbitMQ API.
     """
+
     def __init__(self, config):
         self.config = config
         self.api = "{0}/api".format(self.config.connection.url)

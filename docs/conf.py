@@ -41,10 +41,11 @@ import sys
 cwd = os.getcwd()
 project_root = os.path.dirname(cwd)
 
-from mock import MagicMock
+from mock import MagicMock  # noqa
 
 
 class Mock(MagicMock):
+
     @classmethod
     def __getattr__(cls, name):
         return Mock()
@@ -58,7 +59,7 @@ sys.modules.update(('collectd', Mock()) for mod_name in MOCK_MODULES)
 #  version is used.
 sys.path.insert(0, project_root)
 
-import collectd_rabbitmq
+import collectd_rabbitmq  # noqa
 
 #  -- General configuration ---------------------------------------------
 

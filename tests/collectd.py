@@ -32,6 +32,7 @@ class Config(object):
     """
     Fake config oebject.
     """
+
     def __init__(self, key, values, children=None):
         # also Config instance
         self.parent = None
@@ -60,6 +61,7 @@ class Values(object):
     Attempts to implement:
         https://collectd.org/documentation/manpages/collectd-python.5.shtml
     """
+
     def __init__(self, host='', plugin='', plugin_instance='', value_type='',
                  type_instance='', time=0, values=None, interval=0):
         self.host = host

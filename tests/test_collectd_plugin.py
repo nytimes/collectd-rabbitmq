@@ -38,6 +38,7 @@ class TestCollectdPluginCallbacks(unittest.TestCase):
     """
     Test the collectd callbacks
     """
+
     def test_read(self):
         """
         Asserts that read runs when plugin is loaded
@@ -73,6 +74,7 @@ class BaseTestCollectdPlugin(unittest.TestCase):
     """
     Test the configuration.
     """
+
     def setUp(self):
         username = collectd.Config('Username', ('admin',))
         password = collectd.Config('Password', ('admin',))
@@ -106,6 +108,7 @@ class TestCollectdPluginConfig(BaseTestCollectdPlugin):
     """
     Test the configuration.
     """
+
     def test_config(self):
         """
         Asserts that configuration is populated properly.
@@ -259,6 +262,7 @@ class TestCollectdPluginVhost(BaseTestCollectdPlugin):
     """
     Test the vhosts are generated properly.
     """
+
     def test_generate_vhost_empty(self):
         """
         Assert empty vhost is set properly.
@@ -427,6 +431,7 @@ class TestCollectdPluginDispatchMessageStats(BaseTestCollectdPlugin):
     """
     Test the helper function to dispatch message stats.
     """
+
     def test_dispatch_no_data(self):
         """
         Assert that empty data is not dispatched.

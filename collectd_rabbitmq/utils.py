@@ -24,6 +24,7 @@ class Auth(object):
     """
     Stores Auth data.
     """
+
     def __init__(self, username='guest', password='guest', realm=None):
         self.username = username
         self.password = password
@@ -34,6 +35,7 @@ class ConnectionInfo(object):
     """
     Stores connection information.
     """
+
     def __init__(self, host='localhost', port=15672, scheme='http'):
         self.host = host
         self.port = port
@@ -61,6 +63,7 @@ class Config(object):
     """
     Class that contains configuration data.
     """
+
     def __init__(self, auth, connection, data_to_ignore=None):
         self.auth = auth
         self.connection = connection

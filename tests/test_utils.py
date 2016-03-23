@@ -63,6 +63,7 @@ class TestConnectionInfo(unittest.TestCase):
     """
     Test class for collection object.
     """
+
     def setUp(self):
         self.conn = utils.ConnectionInfo(host="example.com",
                                          port=15672,
@@ -82,6 +83,7 @@ class TestConfig(unittest.TestCase):
     """
     Test class for config object.
     """
+
     def setUp(self):
         self.conn = utils.ConnectionInfo(host="example.com",
                                          port=15672,

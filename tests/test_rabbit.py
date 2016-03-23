@@ -109,6 +109,7 @@ class TestBaseClass(unittest.TestCase):
     """
     Base class for Stats test.
     """
+
     def setUp(self):
         self.conn = ConnectionInfo(host="example.com",
                                    port=15672,
@@ -131,6 +132,7 @@ class TestVhost(TestBaseClass):
     """
     Test vhost items.
     """
+
     def setUp(self):
         TestBaseClass.setUp(self)
         self.test_vhosts = [
@@ -171,6 +173,7 @@ class TestStatsBaseClass(TestBaseClass):
     """
     Base class for Stats test.
     """
+
     def setUp(self):
         TestBaseClass.setUp(self)
         self.stats.get_vhost_names = Mock()
@@ -181,6 +184,7 @@ class TestGetStats(TestBaseClass):
     """
     Tests the get stats method.
     """
+
     def test_get_stats_bad_type(self):
         """
         Asserts that a Value error is raise if type is incorrect.
