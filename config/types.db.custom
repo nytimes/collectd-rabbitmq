@@ -22,6 +22,8 @@ rabbitmq_messages_ready          value:GAUGE:0:U
 rabbitmq_messages_unacknowledged value:GAUGE:0:U
 rabbitmq_consumers               value:GAUGE:0:U
 rabbitmq_details                 avg:GAUGE:0:U avg_rate:GAUGE:0:U rate:GAUGE:0:U samples:GAUGE:0:U
+rabbitmq_consumers value:GAUGE:0:U
+rabbitmq_details avg:GAUGE:0:U, avg_rate:GAUGE:0:U, rate:GAUGE:0:U, samples:GAUGE:0:U
 
 ack                 value:GAUGE:0:U
 ack_details         value:GAUGE:0:U

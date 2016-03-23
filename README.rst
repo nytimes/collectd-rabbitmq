@@ -6,7 +6,7 @@ collectd-rabbitmq
         :target: https://pypi.python.org/pypi/collectd-rabbitmq
 
 .. image:: https://img.shields.io/travis/jimbydamonk/collectd-rabbitmq.svg
-        :target: https://travis-ci.org/jimbydamonk/collectd-rabbitmq
+        :target: https://travis-ci.org/NYTimes/collectd-rabbitmq
 
 .. image:: https://readthedocs.org/projects/collectd-rabbitmq/badge/?version=latest
         :target: https://readthedocs.org/projects/collectd-rabbitmq/?badge=latest
@@ -24,6 +24,110 @@ Features
 
 * Support queue, exchange, and node stats,
 
+
+Configuration
+-------------
+
+This plugin supports a small amount of configuration options:
+
+* `Username`: The rabbitmq user. Defaults to `guest`
+* `Password`: The rabbitmq user password. Defaults to `guest`
+* `Realm`: The http realm for authentication. Defaults to `RabbitMQ Management`
+* `Scheme`: The protocol that the rabbitmq management API is running on. Defaults to `http`
+* `Host`: The hostname that the rabbitmq server running on. Defaults to `localhost`
+* `Port`: The port that the rabbitmq server is listening on. Defaults to `15672`
+* `Ignore`: The queue to ignore, matching by Regex.  See example.
+
+Example Configuration
+---------------------
+
+```
+LoadPlugin python
+<Plugin python>
+  ModulePath "/usr/lib/python2.7/site-packages/collectd-rabbitmq"
+  LogTraces true
+  Interactive false
+  Import rabbitmq
+  <Module rabbitmq>
+    Username "guest"
+    Password "guest"
+    Realm "RabbitMQ Management"
+    Host "localhost"
+    Port "15672"
+    <Ignore "queue">
+      Regex "amq-gen-.*"
+      Regex "tmp-.*"
+    </Ignore>
+  </Module>
+</Plugin>
+```
+
+Nodes
+-----
+
+For each node the following statistics are gathered:
+
+* disk_free_limit
+* fd_total
+* fd_used
+* mem_limit
+* mem_used
+* proc_total
+* proc_used
+* processors
+* run_queue
+* sockets_total
+* sockets_used
+
+Queues
+-------
+
+For each queue in each vhost the following statistics are gathered:
+_NOTE_: The `/` vhost name is sent as `default`
+
+* message_stats
+    * deliver_get
+    * deliver_get_details
+        * rate
+    * get
+    * get_details
+        * rate
+    * publish
+    * publish_details
+        * rate
+    * redeliver
+    * redeliver_details
+        * rate
+* messages
+* messages_details
+    * rate
+* messages_ready
+* messages_ready_details
+    * rate
+* messages_unacknowledged
+* messages_unacknowledged_details
+  * rate
+* memory
+* consumers
+
+Exchanges
+----------
+
+For each exchange in each vhost the following statistics are gathered:
+_NOTE_: The `/` vhost name is sent as `default`
+
+* disk_free
+* disk_free_limit
+* fd_total
+* fd_used
+* mem_limit
+* mem_used
+* proc_total
+* proc_used
+* processors
+* run_queue
+* sockets_total
+* sockets_used
 
 Credits
 ---------
