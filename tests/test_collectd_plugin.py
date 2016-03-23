@@ -17,21 +17,21 @@
 
 """ Main rabbit test module """
 
-import logging
-import os
-import sys
-import unittest
+import logging  # noqa
+import os  # noqa
+import sys  # noqa
+import unittest  # noqa
 
 from mock import MagicMock, Mock, patch
 
 # Updating path so that the mock collectd gets added
 sys.path.append(os.path.dirname(__file__))
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-import collectd
+import collectd  # noqa
 
-from collectd_rabbitmq import collectd_plugin
-from tests.utils import create_mock_url_repsonse
-from tests.utils import create_mock_node_url_repsonse, get_message_stats_data
+from collectd_rabbitmq import collectd_plugin  # noqa
+from tests.utils import create_mock_url_repsonse  # noqa
+from tests.utils import create_mock_node_url_repsonse, get_message_stats_data  # noqa
 
 
 class TestCollectdPluginCallbacks(unittest.TestCase):
