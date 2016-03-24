@@ -39,7 +39,7 @@ This plugin supports a small amount of configuration options:
 * `Ignore`: The queue to ignore, matching by Regex.  See example.
 
 See `this example`_ for further details.
-    .. _this example: config/collectd.conf.
+    .. _this example: config/collectd.conf
 
 Nodes
 -----
