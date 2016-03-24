@@ -5,7 +5,7 @@ collectd-rabbitmq
 .. image:: https://img.shields.io/pypi/v/collectd-rabbitmq.svg
         :target: https://pypi.python.org/pypi/collectd-rabbitmq
 
-.. image:: https://img.shields.io/travis/jimbydamonk/collectd-rabbitmq.svg
+.. image:: https://img.shields.io/travis/NYTimes.com/collectd-rabbitmq.svg
         :target: https://travis-ci.org/NYTimes/collectd-rabbitmq
 
 .. image:: https://readthedocs.org/projects/collectd-rabbitmq/badge/?version=latest
@@ -38,29 +38,9 @@ This plugin supports a small amount of configuration options:
 * `Port`: The port that the rabbitmq server is listening on. Defaults to `15672`
 * `Ignore`: The queue to ignore, matching by Regex.  See example.
 
-Example Configuration
----------------------
-
-```
-LoadPlugin python
-<Plugin python>
-  ModulePath "/usr/lib/python2.7/site-packages/collectd-rabbitmq"
-  LogTraces true
-  Interactive false
-  Import rabbitmq
-  <Module rabbitmq>
-    Username "guest"
-    Password "guest"
-    Realm "RabbitMQ Management"
-    Host "localhost"
-    Port "15672"
-    <Ignore "queue">
-      Regex "amq-gen-.*"
-      Regex "tmp-.*"
-    </Ignore>
-  </Module>
-</Plugin>
-```
+  Example Configuration
+  ---------------------
+      .. literalinclude::  ../config/collectd.conf
 
 Nodes
 -----
