@@ -38,9 +38,8 @@ This plugin supports a small amount of configuration options:
 * `Port`: The port that the rabbitmq server is listening on. Defaults to `15672`
 * `Ignore`: The queue to ignore, matching by Regex.  See example.
 
-  Example Configuration
-  ---------------------
-      .. literalinclude::  ../config/collectd.conf
+See `this example`_ for further details.
+    .. _this example: config/collectd.conf.
 
 Nodes
 -----
