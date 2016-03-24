@@ -5,7 +5,7 @@ collectd-rabbitmq
 .. image:: https://img.shields.io/pypi/v/collectd-rabbitmq.svg
         :target: https://pypi.python.org/pypi/collectd-rabbitmq
 
-.. image:: https://img.shields.io/travis/NYTimes.com/collectd-rabbitmq.svg
+.. image:: https://api.travis-ci.org/NYTimes/collectd-rabbitmq.svg
         :target: https://travis-ci.org/NYTimes/collectd-rabbitmq
 
 .. image:: https://readthedocs.org/projects/collectd-rabbitmq/badge/?version=latest
