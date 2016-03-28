@@ -40,8 +40,10 @@ deliver                 value:GAUGE:0:U
 deliver_details         value:GAUGE:0:U
 deliver_noack           value:GAUGE:0:U
 get                     value:GAUGE:0:U
+get_details             value:GAUGE:0:U
 get_noack               value:GAUGE:0:U
 deliver_get             value:GAUGE:0:U
 deliver_get_details     value:GAUGE:0:U
 redeliver               value:GAUGE:0:U
+redeliver_details       value:GAUGE:0:U
 return                  value:GAUGE:0:U
