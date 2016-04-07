@@ -40,7 +40,6 @@ def configure(config_values):
     data_to_ignore = dict()
 
     for config_value in config_values.children:
-        collectd.info("%s = %s" % (config_value.key, config_value.values))
         if len(config_value.values) > 0:
             if config_value.key == 'Username':
                 username = config_value.values[0]
