@@ -217,7 +217,7 @@ class CollectdPlugin(object):
         metric = collectd.Values()
         metric.host = host
 
-        metric.plugin = "{0}.{1}".format(socket.gethostname(), plugin)
+        metric.plugin = "{0}.{1}".format(host, plugin)
 
         if plugin_instance:
             metric.plugin_instance = plugin_instance
