@@ -20,6 +20,7 @@ This module controls the interactions with collectd
 
 import collectd
 import re
+import socket
 
 from collectd_rabbitmq import rabbit
 from collectd_rabbitmq import utils
@@ -216,7 +217,7 @@ class CollectdPlugin(object):
         metric = collectd.Values()
         metric.host = host
 
-        metric.plugin = plugin
+        metric.plugin = "{0}.{1}".format(socket.hostname(), plugin)
 
         if plugin_instance:
             metric.plugin_instance = plugin_instance
