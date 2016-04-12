@@ -52,6 +52,8 @@ def configure(config_values):
                 port = config_value.values[0]
             elif config_value.key == 'Realm':
                 realm = config_value.values[0]
+            elif config_value.key == 'Scheme':
+                scheme = config_value.values[0]
             elif config_value.key == 'Ignore':
                 type_rmq = config_value.values[0]
                 data_to_ignore[type_rmq] = list()
@@ -63,7 +65,7 @@ def configure(config_values):
     global CONFIG  # pylint: disable=W0603
 
     AUTH = utils.Auth(username, password, realm)
-    CONN = utils.ConnectionInfo(host, port)
+    CONN = utils.ConnectionInfo(host, port, scheme)
     CONFIG = utils.Config(AUTH, CONN, data_to_ignore)
 
 
