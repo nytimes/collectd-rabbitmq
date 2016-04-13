@@ -39,6 +39,7 @@ def configure(config_values):
     collectd.debug('Configuring RabbitMQ Plugin')
     data_to_ignore = dict()
 
+    scheme = 'http'
     for config_value in config_values.children:
         collectd.debug("%s = %s" % (config_value.key, config_value.values))
         if len(config_value.values) > 0:
