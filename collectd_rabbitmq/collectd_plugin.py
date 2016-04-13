@@ -36,11 +36,12 @@ def configure(config_values):
     Converts a collectd configuration into rabbitmq configuration.
     """
 
-    collectd.info('Configuring RabbitMQ Plugin')
+    collectd.debug('Configuring RabbitMQ Plugin')
     data_to_ignore = dict()
 
+    scheme = 'http'
     for config_value in config_values.children:
-        collectd.info("%s = %s" % (config_value.key, config_value.values))
+        collectd.debug("%s = %s" % (config_value.key, config_value.values))
         if len(config_value.values) > 0:
             if config_value.key == 'Username':
                 username = config_value.values[0]
@@ -52,6 +53,8 @@ def configure(config_values):
                 port = config_value.values[0]
             elif config_value.key == 'Realm':
                 realm = config_value.values[0]
+            elif config_value.key == 'Scheme':
+                scheme = config_value.values[0]
             elif config_value.key == 'Ignore':
                 type_rmq = config_value.values[0]
                 data_to_ignore[type_rmq] = list()
@@ -63,7 +66,7 @@ def configure(config_values):
     global CONFIG  # pylint: disable=W0603
 
     AUTH = utils.Auth(username, password, realm)
-    CONN = utils.ConnectionInfo(host, port)
+    CONN = utils.ConnectionInfo(host, port, scheme)
     CONFIG = utils.Config(AUTH, CONN, data_to_ignore)
 
 
@@ -79,7 +82,7 @@ def read():
     """
     Reads and dispatches data.
     """
-    collectd.info("Reading data from rabbit and dispatching")
+    collectd.debug("Reading data from rabbit and dispatching")
     if not PLUGIN:
         collectd.warning('Plugin not ready')
         return
