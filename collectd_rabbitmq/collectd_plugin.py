@@ -97,6 +97,7 @@ class CollectdPlugin(object):
                      'deliver', 'deliver_noack', 'get', 'get_noack',
                      'deliver_get', 'redeliver', 'return']
     message_details = ['avg', 'avg_rate', 'rate', 'sample']
+    queue_stats = ['messages', 'messages_ready', 'messages_unacknowledged']
     node_stats = ['disk_free', 'disk_free_limit', 'fd_total',
                   'fd_used', 'mem_limit', 'mem_used',
                   'proc_total', 'proc_used', 'processors', 'run_queue',
@@ -174,6 +175,25 @@ class CollectdPlugin(object):
                     self.dispatch_values(value, name, 'rabbitmq', None,
                                          "%s_details" % stat_name, detail)
 
+    def dispatch_queue_stats(self, data, vhost, plugin, plugin_instance):
+        """
+        Sends queue stats to collectd.
+        """
+        if not data:
+            collectd.debug("No data for %s in vhost %s" % (plugin, vhost))
+            return
+
+        vhost = self.generate_vhost_name(vhost)
+
+        for name in self.queue_stats:
+            if name not in data:
+                return
+            collectd.debug("Dispatching stat %s for %s in %s" %
+                           (name, plugin_instance, vhost))
+
+            value = data.get(name, 0)
+            self.dispatch_values(value, vhost, plugin, plugin_instance, name)
+
     def dispatch_exchanges(self, vhost_name):
         """
         Dispatches exchange data for vhost_name.
@@ -190,9 +210,11 @@ class CollectdPlugin(object):
         """
         collectd.debug("Dispatching queue data for {0}".format(vhost_name))
         stats = self.rabbit.get_queue_stats(vhost_name=vhost_name)
-        for exchange_name, value in stats.iteritems():
+        for queue_name, value in stats.iteritems():
             self.dispatch_message_stats(value, vhost_name, 'queues',
-                                        exchange_name)
+                                        queue_name)
+            self.dispatch_queue_stats(value, vhost_name, 'queues',
+                                      queue_name)
 
     # pylint: disable=R0913
     @staticmethod

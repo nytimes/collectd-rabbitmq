@@ -47,3 +47,7 @@ deliver_get_details     value:GAUGE:0:U
 redeliver               value:GAUGE:0:U
 redeliver_details       value:GAUGE:0:U
 return                  value:GAUGE:0:U
+
+messages                value:GAUGE:0:U
+messages_ready          value:GAUGE:0:U
+messages_unacknowledged value:GAUGE:0:U
