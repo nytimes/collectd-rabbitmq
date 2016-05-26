@@ -129,7 +129,10 @@ class CollectdPlugin(object):
             name = re.sub(r'^/', 'slash_', name)
             name = re.sub(r'/$', '_slash', name)
             name = re.sub(r'/', '_slash_', name)
-        vhost_prefix = '%s_' % CONFIG.vhost_prefix if CONFIG.vhost_prefix else ''
+
+        vhost_prefix = ''
+        if CONFIG.vhost_prefix:
+            vhost_prefix = '%s_' % CONFIG.vhost_prefix
         return 'rabbitmq_%s%s' % (vhost_prefix, name)
 
     def dispatch_message_stats(self, data, vhost, plugin, plugin_instance):

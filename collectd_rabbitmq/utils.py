@@ -64,7 +64,8 @@ class Config(object):
     Class that contains configuration data.
     """
 
-    def __init__(self, auth, connection, data_to_ignore=None, vhost_prefix=None):
+    def __init__(self, auth, connection, data_to_ignore=None,
+                 vhost_prefix=None):
         self.auth = auth
         self.connection = connection
         self.data_to_ignore = dict()
