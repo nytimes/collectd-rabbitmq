@@ -36,6 +36,7 @@ This plugin supports a small amount of configuration options:
 * `Scheme`: The protocol that the rabbitmq management API is running on. Defaults to `http`
 * `Host`: The hostname that the rabbitmq server running on. Defaults to `localhost`
 * `Port`: The port that the rabbitmq server is listening on. Defaults to `15672`
+* `VHostPrefix`: Arbitrary string to prefix the vhost name with. Defaults to None
 * `Ignore`: The queue to ignore, matching by Regex.  See example.
 
 See `this example`_ for further details.
