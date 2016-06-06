@@ -38,8 +38,9 @@ def configure(config_values):
 
     collectd.debug('Configuring RabbitMQ Plugin')
     data_to_ignore = dict()
-
     scheme = 'http'
+    vhost_prefix = None
+
     for config_value in config_values.children:
         collectd.debug("%s = %s" % (config_value.key, config_value.values))
         if len(config_value.values) > 0:
@@ -55,6 +56,8 @@ def configure(config_values):
                 realm = config_value.values[0]
             elif config_value.key == 'Scheme':
                 scheme = config_value.values[0]
+            elif config_value.key == 'VHostPrefix':
+                vhost_prefix = config_value.values[0]
             elif config_value.key == 'Ignore':
                 type_rmq = config_value.values[0]
                 data_to_ignore[type_rmq] = list()
@@ -67,7 +70,7 @@ def configure(config_values):
 
     AUTH = utils.Auth(username, password, realm)
     CONN = utils.ConnectionInfo(host, port, scheme)
-    CONFIG = utils.Config(AUTH, CONN, data_to_ignore)
+    CONFIG = utils.Config(AUTH, CONN, data_to_ignore, vhost_prefix)
 
 
 def init():
@@ -126,7 +129,11 @@ class CollectdPlugin(object):
             name = re.sub(r'^/', 'slash_', name)
             name = re.sub(r'/$', '_slash', name)
             name = re.sub(r'/', '_slash_', name)
-        return 'rabbitmq_%s' % name
+
+        vhost_prefix = ''
+        if CONFIG.vhost_prefix:
+            vhost_prefix = '%s_' % CONFIG.vhost_prefix
+        return 'rabbitmq_%s%s' % (vhost_prefix, name)
 
     def dispatch_message_stats(self, data, vhost, plugin, plugin_instance):
         """
