@@ -118,10 +118,9 @@ class CollectdPlugin(object):
 
     def generate_vhost_name(self, name):
         """
-        Generate a "normalized" vhost name without /.
+        Generate a "normalized" vhost name without / (or escaped /).
         """
-        name = name.replace('%2F', '/')  # replace escaped slash
-        if not name or name == '/':
+        if not name or name == '/' or name == '%2F':
             name = 'default'
         else:
             name = re.sub(r'^/', 'slash_', name)
@@ -164,20 +163,25 @@ class CollectdPlugin(object):
         """
         Dispatches nodes stats.
         """
+        name = self.generate_vhost_name('')
+        node_names = []
         stats = self.rabbit.get_nodes()
         for node in stats:
-            name = node['name'].split('@')[1]
-            collectd.debug("Getting stats for %s node" % name)
+            node_name = node['name'].split('@')[1]
+            if node_name in node_names:
+                node_name = '%s%s' % (node_name, len(node_names))
+                node_names.append(node_name)
+            collectd.debug("Getting stats for %s node" % node_names)
             for stat_name in self.node_stats:
                 value = node.get(stat_name, 0)
-                self.dispatch_values(value, name, 'rabbitmq', None, stat_name)
+                self.dispatch_values(value, name, node_name, None, stat_name)
 
                 details = node.get("%s_details" % stat_name, None)
                 if not details:
                     continue
                 for detail in self.message_details:
                     value = details.get(detail, 0)
-                    self.dispatch_values(value, name, 'rabbitmq', None,
+                    self.dispatch_values(value, name, node_name, None,
                                          "%s_details" % stat_name, detail)
 
     def dispatch_queue_stats(self, data, vhost, plugin, plugin_instance):
