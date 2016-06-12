@@ -164,20 +164,24 @@ class CollectdPlugin(object):
         """
         Dispatches nodes stats.
         """
+        names = []
         stats = self.rabbit.get_nodes()
         for node in stats:
             name = node['name'].split('@')[1]
+            if name in names:
+                name = '%s%s' % (name, len(names))
+            names.append(name)
             collectd.debug("Getting stats for %s node" % name)
             for stat_name in self.node_stats:
                 value = node.get(stat_name, 0)
-                self.dispatch_values(value, name, 'rabbitmq', None, stat_name)
+                self.dispatch_values(value, 'rabbitmq-hosts', name, None, stat_name)
 
                 details = node.get("%s_details" % stat_name, None)
                 if not details:
                     continue
                 for detail in self.message_details:
                     value = details.get(detail, 0)
-                    self.dispatch_values(value, name, 'rabbitmq', None,
+                    self.dispatch_values(value, 'rabbitmq-hosts', name, None,
                                          "%s_details" % stat_name, detail)
 
     def dispatch_queue_stats(self, data, vhost, plugin, plugin_instance):
