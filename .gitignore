@@ -96,3 +96,6 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Pycharm/Intellij Idea
+.idea
