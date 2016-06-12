@@ -24,11 +24,8 @@ import re
 from collectd_rabbitmq import rabbit
 from collectd_rabbitmq import utils
 
-
-CONFIG = None
-AUTH = None
-CONN = None
-PLUGIN = None
+CONFIGS = []
+INSTANCES = []
 
 
 def configure(config_values):
@@ -64,21 +61,20 @@ def configure(config_values):
                 for regex in config_value.children:
                     data_to_ignore[type_rmq].append(regex.values[0])
 
-    global AUTH  # pylint: disable=W0603
-    global CONN  # pylint: disable=W0603
-    global CONFIG  # pylint: disable=W0603
+    global CONFIGS  # pylint: disable=W0603
 
-    AUTH = utils.Auth(username, password, realm)
-    CONN = utils.ConnectionInfo(host, port, scheme)
-    CONFIG = utils.Config(AUTH, CONN, data_to_ignore, vhost_prefix)
+    auth = utils.Auth(username, password, realm)
+    conn = utils.ConnectionInfo(host, port, scheme)
+    config = utils.Config(auth, conn, data_to_ignore, vhost_prefix)
+    CONFIGS.append(config)
 
 
 def init():
     """
     Creates the logs stash plugin object.
     """
-    global PLUGIN  # pylint: disable=W0603
-    PLUGIN = CollectdPlugin()
+    for config in CONFIGS:
+        INSTANCES.append(CollectdPlugin(config))
 
 
 def read():
@@ -86,10 +82,11 @@ def read():
     Reads and dispatches data.
     """
     collectd.debug("Reading data from rabbit and dispatching")
-    if not PLUGIN:
+    if not INSTANCES:
         collectd.warning('Plugin not ready')
         return
-    PLUGIN.read()
+    for instance in INSTANCES:
+        instance.read()
 
 
 class CollectdPlugin(object):
@@ -106,8 +103,9 @@ class CollectdPlugin(object):
                   'proc_total', 'proc_used', 'processors', 'run_queue',
                   'sockets_total', 'sockets_used']
 
-    def __init__(self):
-        self.rabbit = rabbit.RabbitMQStats(CONFIG)
+    def __init__(self, config):
+        self.config = config
+        self.rabbit = rabbit.RabbitMQStats(self.config)
 
     def read(self):
         """
@@ -118,11 +116,11 @@ class CollectdPlugin(object):
             self.dispatch_exchanges(vhost_name)
             self.dispatch_queues(vhost_name)
 
-    @staticmethod
-    def generate_vhost_name(name):
+    def generate_vhost_name(self, name):
         """
         Generate a "normalized" vhost name without /.
         """
+        name = name.replace('%2F', '/')  # replace escaped slash
         if not name or name == '/':
             name = 'default'
         else:
@@ -131,8 +129,8 @@ class CollectdPlugin(object):
             name = re.sub(r'/', '_slash_', name)
 
         vhost_prefix = ''
-        if CONFIG.vhost_prefix:
-            vhost_prefix = '%s_' % CONFIG.vhost_prefix
+        if self.config.vhost_prefix:
+            vhost_prefix = '%s_' % self.config.vhost_prefix
         return 'rabbitmq_%s%s' % (vhost_prefix, name)
 
     def dispatch_message_stats(self, data, vhost, plugin, plugin_instance):
