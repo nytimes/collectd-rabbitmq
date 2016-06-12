@@ -170,7 +170,7 @@ class CollectdPlugin(object):
             node_name = node['name'].split('@')[1]
             if node_name in node_names:
                 node_name = '%s%s' % (node_name, len(node_names))
-                node_names.append(node_name)
+            node_names.append(node_name)
             collectd.debug("Getting stats for %s node" % node_names)
             for stat_name in self.node_stats:
                 value = node.get(stat_name, 0)
