@@ -199,7 +199,7 @@ class CollectdPlugin(object):
         Dispatches cluster overview stats.
         """
         stats = self.rabbit.get_overview_stats()
-        cluster_name = stats['cluster_name']
+        prefixed_cluster_name = "rabbitmq_%s" % stats['cluster_name']
         for subtree_name, keys in self.overview_stats.items():
             subtree = stats.get(subtree_name, {})
             for stat_name in keys:
@@ -209,7 +209,7 @@ class CollectdPlugin(object):
                     type_name = "rabbitmq_%s" % stat_name
 
                 value = subtree.get(stat_name, 0)
-                self.dispatch_values(value, cluster_name, "overview", subtree_name,
+                self.dispatch_values(value, prefixed_cluster_name, "overview", subtree_name,
                                      type_name)
 
                 details = subtree.get("%s_details" % stat_name, None)
@@ -218,7 +218,7 @@ class CollectdPlugin(object):
                 detail_values = []
                 for detail in self.message_details:
                     detail_values.append(details.get(detail, 0))
-                self.dispatch_values(detail_values, cluster_name, 'overview', subtree_name,
+                self.dispatch_values(detail_values, prefixed_cluster_name, 'overview', subtree_name,
                                      "rabbitmq_details", stat_name)
 
     def dispatch_queue_stats(self, data, vhost, plugin, plugin_instance):
