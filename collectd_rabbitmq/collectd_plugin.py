@@ -20,6 +20,7 @@ This module controls the interactions with collectd
 
 import collectd
 import re
+import urllib
 
 from collectd_rabbitmq import rabbit
 from collectd_rabbitmq import utils
@@ -123,6 +124,9 @@ class CollectdPlugin(object):
         """
         Generate a "normalized" vhost name without /.
         """
+        if name:
+            name = urllib.unquote(name)
+
         if not name or name == '/':
             name = 'default'
         else:
