@@ -108,8 +108,9 @@ class CollectdPlugin(object):
                   'sockets_total', 'sockets_used']
     overview_stats = {'object_totals': ['consumers', 'queues', 'exchanges',
                                         'connections', 'channels'],
-                      'message_stats': ['publish', 'ack', 'deliver_get', 'confirm',
-                                        'redeliver', 'deliver', 'deliver_no_ack'],
+                      'message_stats': ['publish', 'ack', 'deliver_get',
+                                        'confirm', 'redeliver', 'deliver',
+                                        'deliver_no_ack'],
                       'queue_totals': ['messages', 'messages_ready',
                                        'messages_unacknowledged']}
     overview_details = ['rate']
@@ -205,12 +206,13 @@ class CollectdPlugin(object):
             for stat_name in keys:
                 type_name = stat_name
                 type_name = type_name.replace('no_ack', 'noack')
-                if re.match("^(messages|consumers|queues|exchanges|channels)", stat_name) is not None:
+                valid_stats = "^(messages|consumers|queues|exchanges|channels)"
+                if re.match(valid_stats, stat_name) is not None:
                     type_name = "rabbitmq_%s" % stat_name
 
                 value = subtree.get(stat_name, 0)
-                self.dispatch_values(value, prefixed_cluster_name, "overview", subtree_name,
-                                     type_name)
+                self.dispatch_values(value, prefixed_cluster_name, "overview",
+                                     subtree_name, type_name)
 
                 details = subtree.get("%s_details" % stat_name, None)
                 if not details:
@@ -218,7 +220,8 @@ class CollectdPlugin(object):
                 detail_values = []
                 for detail in self.message_details:
                     detail_values.append(details.get(detail, 0))
-                self.dispatch_values(detail_values, prefixed_cluster_name, 'overview', subtree_name,
+                self.dispatch_values(detail_values, prefixed_cluster_name,
+                                     'overview', subtree_name,
                                      "rabbitmq_details", stat_name)
 
     def dispatch_queue_stats(self, data, vhost, plugin, plugin_instance):
