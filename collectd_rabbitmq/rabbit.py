@@ -156,6 +156,12 @@ class RabbitMQStats(object):
         """
         return self.get_stats('queue', queue_name, vhost_name)
 
+    def get_overview_stats(self):
+        """
+        Returns a dictionary of cluster/node-wide stats.
+        """
+        return self.get_info("overview")
+
     def get_stats(self, stat_type, stat_name, vhost_name):
         """
         Returns a dictionary of stats.
