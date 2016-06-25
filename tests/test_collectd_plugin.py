@@ -335,13 +335,16 @@ class TestCollectdPluginRead(BaseTestCollectdPlugin):
         dispatch_nodes = MagicMock()
         dispatch_queues = MagicMock()
         dispatch_exchanges = MagicMock()
+        dispatch_overview = MagicMock()
         self.collectd_plugin.dispatch_nodes = dispatch_nodes
         self.collectd_plugin.dispatch_queues = dispatch_queues
         self.collectd_plugin.dispatch_exchanges = dispatch_exchanges
+        self.collectd_plugin.dispatch_overview = dispatch_overview
 
         self.collectd_plugin.read()
 
         self.assertTrue(dispatch_nodes.called)
+        self.assertTrue(dispatch_overview.called)
         self.assertTrue(dispatch_queues.called)
         self.assertTrue(dispatch_exchanges.called)
 
@@ -353,13 +356,16 @@ class TestCollectdPluginRead(BaseTestCollectdPlugin):
         dispatch_nodes = MagicMock()
         dispatch_queues = MagicMock()
         dispatch_exchanges = MagicMock()
+        dispatch_overview = MagicMock()
         self.collectd_plugin.dispatch_nodes = dispatch_nodes
         self.collectd_plugin.dispatch_queues = dispatch_queues
         self.collectd_plugin.dispatch_exchanges = dispatch_exchanges
+        self.collectd_plugin.dispatch_overview = dispatch_overview
 
         self.collectd_plugin.read()
 
         self.assertTrue(dispatch_nodes.called)
+        self.assertTrue(dispatch_overview.called)
         self.assertFalse(dispatch_queues.called)
         self.assertFalse(dispatch_exchanges.called)
 
