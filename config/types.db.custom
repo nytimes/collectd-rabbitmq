@@ -20,6 +20,7 @@ rabbitmq_memory                  value:GAUGE:0:U
 rabbitmq_messages                value:GAUGE:0:U
 rabbitmq_messages_ready          value:GAUGE:0:U
 rabbitmq_messages_unacknowledged value:GAUGE:0:U
+rabbitmq_connections             value:GAUGE:0:U
 rabbitmq_consumers               value:GAUGE:0:U
 rabbitmq_exchanges               value:GAUGE:0:U
 rabbitmq_channels                value:GAUGE:0:U

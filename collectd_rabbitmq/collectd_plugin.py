@@ -206,8 +206,10 @@ class CollectdPlugin(object):
             for stat_name in keys:
                 type_name = stat_name
                 type_name = type_name.replace('no_ack', 'noack')
-                valid_stats = "^(messages|consumers|queues|exchanges|channels)"
-                if re.match(valid_stats, stat_name) is not None:
+                stats_re = re.compile(r"""
+                    ^(connections|messages|consumers|queues|exchanges|channels)
+                    """, re.X)
+                if re.match(stats_re, stat_name) is not None:
                     type_name = "rabbitmq_%s" % stat_name
 
                 value = subtree.get(stat_name, 0)
