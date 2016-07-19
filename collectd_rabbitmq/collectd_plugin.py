@@ -200,6 +200,8 @@ class CollectdPlugin(object):
         Dispatches cluster overview stats.
         """
         stats = self.rabbit.get_overview_stats()
+        if stats is None:
+            return None
         prefixed_cluster_name = "rabbitmq_%s" % stats['cluster_name']
         for subtree_name, keys in self.overview_stats.items():
             subtree = stats.get(subtree_name, {})
