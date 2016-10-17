@@ -25,10 +25,9 @@ class Auth(object):
     Stores Auth data.
     """
 
-    def __init__(self, username='guest', password='guest', realm=None):
+    def __init__(self, username='guest', password='guest'):
         self.username = username
         self.password = password
-        self.realm = realm or "RabbitMQ Management"
 
 
 class ConnectionInfo(object):

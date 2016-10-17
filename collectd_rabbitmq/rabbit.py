@@ -51,7 +51,7 @@ class RabbitMQStats(object):
         """
         return JSON object from URL.
         """
-        self.config.auth.realm = "RabbitMQ Management"
+
         url = "{0}/{1}".format(self.api, '/'.join(args))
         collectd.debug("Getting info for %s" % url)
 

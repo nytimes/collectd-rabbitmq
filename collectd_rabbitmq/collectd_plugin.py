@@ -53,8 +53,6 @@ def configure(config_values):
                 host = config_value.values[0]
             elif config_value.key == 'Port':
                 port = config_value.values[0]
-            elif config_value.key == 'Realm':
-                realm = config_value.values[0]
             elif config_value.key == 'Scheme':
                 scheme = config_value.values[0]
             elif config_value.key == 'VHostPrefix':
@@ -69,7 +67,7 @@ def configure(config_values):
     global CONN  # pylint: disable=W0603
     global CONFIG  # pylint: disable=W0603
 
-    AUTH = utils.Auth(username, password, realm)
+    AUTH = utils.Auth(username, password)
     CONN = utils.ConnectionInfo(host, port, scheme)
     CONFIG = utils.Config(AUTH, CONN, data_to_ignore, vhost_prefix)
 
