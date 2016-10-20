@@ -23,6 +23,7 @@ import json
 import urllib
 import requests
 
+
 class RabbitMQStats(object):
     """
         Class to interface with the RabbitMQ API.
@@ -56,10 +57,11 @@ class RabbitMQStats(object):
         collectd.debug("Getting info for %s" % url)
 
         try:
-            request = requests.get(url, auth=(self.config.auth.username, self.config.auth.password))
+            request = requests.get(url, auth=(self.config.auth.username,
+                                              self.config.auth.password))
             info = request.content
         except requests.exceptions.RequestException as requesterror:
-            collectd.error("HTTP Error: %s" % requesterror )
+            collectd.error("HTTP Error: %s" % requesterror)
             return_value = None
 
         try:
@@ -72,7 +74,8 @@ class RabbitMQStats(object):
             return_value = None
 
         if 'error' in return_value:
-            collectd.error("Response contained error: %s" % return_value['error']  )
+            collectd.error("Response contained error: %s" %
+                           return_value['error'])
             return_value = None
         return return_value
 
