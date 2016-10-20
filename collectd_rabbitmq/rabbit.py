@@ -21,7 +21,7 @@ python plugin for collectd to obtain rabbitmq stats
 import collectd
 import json
 import urllib
-import urllib2
+import requests
 
 
 class RabbitMQStats(object):
@@ -40,11 +40,12 @@ class RabbitMQStats(object):
         """
         collectd.debug("Getting names for %s" % items)
         names = list()
-        for item in items:
-            name = item.get('name', None)
-            if name:
-                name = urllib.quote(name, '')
-                names.append(name)
+        if items is not None:
+            for item in items:
+                name = item.get('name', None)
+                if name:
+                    name = urllib.quote(name, '')
+                    names.append(name)
         return names
 
     def get_info(self, *args):
@@ -55,33 +56,26 @@ class RabbitMQStats(object):
         url = "{0}/{1}".format(self.api, '/'.join(args))
         collectd.debug("Getting info for %s" % url)
 
-        auth_handler = urllib2.HTTPBasicAuthHandler()
-        auth_handler.add_password(realm=self.config.auth.realm,
-                                  uri=self.api,
-                                  user=self.config.auth.username,
-                                  passwd=self.config.auth.password)
-        opener = urllib2.build_opener(auth_handler)
-        urllib2.install_opener(opener)
+        try:
+            request = requests.get(url, auth=(self.config.auth.username,
+                                              self.config.auth.password))
+            info = request.content
+        except requests.exceptions.RequestException as requesterror:
+            collectd.error("HTTP Error: %s" % requesterror)
+            return_value = None
 
         try:
-            info = urllib2.urlopen(url)
-        except urllib2.HTTPError as http_error:
-            collectd.error("HTTP Error: %s" % http_error)
-            return None
-        except urllib2.URLError as url_error:
-            collectd.error("URL Error: %s" % url_error)
-            return None
-        except ValueError as value_error:
-            collectd.error("Value Error: %s" % value_error)
-            return None
-
-        try:
-            return_value = json.load(info)
+            return_value = json.loads(info)
         except ValueError as err:
             collectd.error("ValueError parsing JSON from %s: %s" % (url, err))
             return_value = None
         except TypeError as err:
             collectd.error("TypeError parsing JSON from %s: %s" % (url, err))
+            return_value = None
+
+        if 'error' in return_value:
+            collectd.error("Response contained error: %s" %
+                           return_value['error'])
             return_value = None
         return return_value
 
