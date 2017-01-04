@@ -1,0 +1,3 @@
+- name: jimbydamonk.rabbitmq
+- name: jimbydamonk.collectd
+- name: jimbydamonk.graphite

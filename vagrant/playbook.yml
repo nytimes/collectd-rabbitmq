@@ -1,0 +1,63 @@
+---
+- hosts: "all"
+  become: yes
+  pre_tasks:
+     - shell: python  /vagrant/setup.py install
+  roles:
+    - role: jimbydamonk.rabbitmq
+      rabbitmq_vhosts:
+        - name: collectd
+      rabbitmq_users:
+        - vhost:    collectd
+          name:     collectd
+          password: collectd
+          tags: administrator
+      rabbitmq_permissions:
+        - user: collectd
+          vhost: collectd
+          configure: ".*"
+          write: ".*"
+          read: ".*"
+        - user: "collectd"
+          vhost: "/"
+          configure: ".*"
+          write: ".*"
+          read: ".*"
+    - role: jimbydamonk.collectd
+      collectd_template_files:
+       - src: "{{ playbook_dir }}/templates/graphite.conf.j2"
+       - src: "{{ playbook_dir }}/templates/rabbit.conf.j2"
+    - role: jimbydamonk.graphite
+
+  tasks:
+    - name: Install pika
+      pip:
+        name: pika
+
+    - name: Flush role handlers
+      meta: flush_handlers
+
+    - name: Create test topic exchange
+      rabbitmq_exchange:
+        name: test_topic_exchange
+        type: topic
+        vhost: collectd
+        login_user: collectd
+        login_password: collectd
+
+    - name: Create test queue
+      rabbitmq_queue:
+        name: test_queue
+        vhost: collectd
+        login_user: collectd
+        login_password: collectd
+
+    - name: Create test binding
+      rabbitmq_binding:
+        name: test_topic_exchange
+        destination: test_queue
+        type: queue
+        routing_key: test
+        vhost: collectd
+        login_user: collectd
+        login_password: collectd

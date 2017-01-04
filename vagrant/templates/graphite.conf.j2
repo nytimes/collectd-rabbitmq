@@ -1,0 +1,13 @@
+LoadPlugin "write_graphite"
+<Plugin "write_graphite">
+ <Carbon>
+   Host "localhost"
+   Port "2003"
+   Prefix "collectd."
+   Protocol "tcp"
+   EscapeCharacter "_"
+   SeparateInstances true
+   StoreRates false
+   AlwaysAppendDS false
+ </Carbon>
+</Plugin>

@@ -1,0 +1,17 @@
+TypesDB "/usr/local/lib/python2.7/dist-packages/collectd_rabbitmq-1.13.0-py2.7.egg/share/collectd-rabbitmq/types.db.custom"
+
+LoadPlugin python
+<Plugin python>
+  LogTraces true
+  Interactive false
+  Import "collectd_rabbitmq.collectd_plugin"
+  <Module "collectd_rabbitmq.collectd_plugin">
+
+    Username "collectd"
+    Password "collectd"
+    Realm "RabbitMQ Management"
+    Host "localhost"
+    Port "15672"
+
+  </Module>
+</Plugin>
