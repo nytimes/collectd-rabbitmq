@@ -16,6 +16,8 @@
 # limitations under the License.
 
 
+from setuptools.command.test import test as TestCommand
+
 try:
     from setuptools import setup
 except ImportError:
@@ -37,9 +39,31 @@ test_requirements = [
 ]
 
 
+class Tox(TestCommand):
+    user_options = [('tox-args=', 'a', "Arguments to pass to tox")]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        self.tox_args = None
+
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+
+    def run_tests(self):
+        # import here, cause outside the eggs aren't loaded
+        import shlex
+        import tox
+        args = self.tox_args
+        if args:
+            args = shlex.split(self.tox_args)
+        tox.cmdline(args=args)
+
+
 setup(
     name='collectd-rabbitmq',
-    version='1.11.0',
+    version='1.10.0',
     description="A collected plugin, written in python, to"
                 "collect statistics from RabbitMQ.",
     long_description=readme + '\n\n' + history,
@@ -64,6 +88,7 @@ setup(
         'Programming Language :: Python :: 2.7',
     ],
     test_suite='tests',
-    tests_require=test_requirements,
+    tests_require=['tox'] + test_requirements,
+    cmdclass={'test': Tox},
     data_files=[('share/collectd-rabbitmq/', ['config/types.db.custom'])],
 )
