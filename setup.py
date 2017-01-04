@@ -63,7 +63,7 @@ class Tox(TestCommand):
 
 setup(
     name='collectd-rabbitmq',
-    version='1.10.0',
+    version='1.11.0',
     description="A collected plugin, written in python, to"
                 "collect statistics from RabbitMQ.",
     long_description=readme + '\n\n' + history,
