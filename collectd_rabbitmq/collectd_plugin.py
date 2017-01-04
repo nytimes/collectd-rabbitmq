@@ -101,7 +101,8 @@ class CollectdPlugin(object):
                      'deliver', 'deliver_noack', 'get', 'get_noack',
                      'deliver_get', 'redeliver', 'return']
     message_details = ['avg', 'avg_rate', 'rate', 'sample']
-    queue_stats = ['messages', 'messages_ready', 'messages_unacknowledged']
+    queue_stats = ['consumers', 'messages', 'messages_ready',
+                   'messages_unacknowledged']
     node_stats = ['disk_free', 'disk_free_limit', 'fd_total',
                   'fd_used', 'mem_limit', 'mem_used',
                   'proc_total', 'proc_used', 'processors', 'run_queue',
