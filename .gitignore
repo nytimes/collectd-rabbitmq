@@ -99,3 +99,5 @@ target/
 
 vagrant/roles
 vagrant/.vagrant
+# Pycharm/Intellij Idea
+.idea

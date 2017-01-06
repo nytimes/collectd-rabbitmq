@@ -25,11 +25,8 @@ import urllib
 from collectd_rabbitmq import rabbit
 from collectd_rabbitmq import utils
 
-
-CONFIG = None
-AUTH = None
-CONN = None
-PLUGIN = None
+CONFIGS = []
+INSTANCES = []
 
 
 def configure(config_values):
@@ -65,21 +62,20 @@ def configure(config_values):
                 for regex in config_value.children:
                     data_to_ignore[type_rmq].append(regex.values[0])
 
-    global AUTH  # pylint: disable=W0603
-    global CONN  # pylint: disable=W0603
-    global CONFIG  # pylint: disable=W0603
+    global CONFIGS  # pylint: disable=W0603
 
-    AUTH = utils.Auth(username, password, realm)
-    CONN = utils.ConnectionInfo(host, port, scheme)
-    CONFIG = utils.Config(AUTH, CONN, data_to_ignore, vhost_prefix)
+    auth = utils.Auth(username, password, realm)
+    conn = utils.ConnectionInfo(host, port, scheme)
+    config = utils.Config(auth, conn, data_to_ignore, vhost_prefix)
+    CONFIGS.append(config)
 
 
 def init():
     """
     Creates the logs stash plugin object.
     """
-    global PLUGIN  # pylint: disable=W0603
-    PLUGIN = CollectdPlugin()
+    for config in CONFIGS:
+        INSTANCES.append(CollectdPlugin(config))
 
 
 def read():
@@ -87,10 +83,11 @@ def read():
     Reads and dispatches data.
     """
     collectd.debug("Reading data from rabbit and dispatching")
-    if not PLUGIN:
+    if not INSTANCES:
         collectd.warning('Plugin not ready')
         return
-    PLUGIN.read()
+    for instance in INSTANCES:
+        instance.read()
 
 
 class CollectdPlugin(object):
@@ -116,8 +113,9 @@ class CollectdPlugin(object):
                                        'messages_unacknowledged']}
     overview_details = ['rate']
 
-    def __init__(self):
-        self.rabbit = rabbit.RabbitMQStats(CONFIG)
+    def __init__(self, config):
+        self.config = config
+        self.rabbit = rabbit.RabbitMQStats(self.config)
 
     def read(self):
         """
@@ -129,10 +127,9 @@ class CollectdPlugin(object):
             self.dispatch_exchanges(vhost_name)
             self.dispatch_queues(vhost_name)
 
-    @staticmethod
-    def generate_vhost_name(name):
+    def generate_vhost_name(self, name):
         """
-        Generate a "normalized" vhost name without /.
+        Generate a "normalized" vhost name without / (or escaped /).
         """
         if name:
             name = urllib.unquote(name)
@@ -145,8 +142,8 @@ class CollectdPlugin(object):
             name = re.sub(r'/', '_slash_', name)
 
         vhost_prefix = ''
-        if CONFIG.vhost_prefix:
-            vhost_prefix = '%s_' % CONFIG.vhost_prefix
+        if self.config.vhost_prefix:
+            vhost_prefix = '%s_' % self.config.vhost_prefix
         return 'rabbitmq_%s%s' % (vhost_prefix, name)
 
     def dispatch_message_stats(self, data, vhost, plugin, plugin_instance):
@@ -180,20 +177,25 @@ class CollectdPlugin(object):
         """
         Dispatches nodes stats.
         """
+        name = self.generate_vhost_name('')
+        node_names = []
         stats = self.rabbit.get_nodes()
         for node in stats:
-            name = node['name'].split('@')[1]
-            collectd.debug("Getting stats for %s node" % name)
+            node_name = node['name'].split('@')[1]
+            if node_name in node_names:
+                node_name = '%s%s' % (node_name, len(node_names))
+            node_names.append(node_name)
+            collectd.debug("Getting stats for %s node" % node_names)
             for stat_name in self.node_stats:
                 value = node.get(stat_name, 0)
-                self.dispatch_values(value, name, 'rabbitmq', None, stat_name)
+                self.dispatch_values(value, name, node_name, None, stat_name)
 
                 details = node.get("%s_details" % stat_name, None)
                 if not details:
                     continue
                 for detail in self.message_details:
                     value = details.get(detail, 0)
-                    self.dispatch_values(value, name, 'rabbitmq', None,
+                    self.dispatch_values(value, name, node_name, None,
                                          "%s_details" % stat_name, detail)
 
     def dispatch_overview(self):
