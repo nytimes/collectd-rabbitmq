@@ -12,6 +12,8 @@ collectd-rabbitmq
         :target: https://readthedocs.org/projects/collectd-rabbitmq/?badge=latest
         :alt: Documentation Status
 
+.. image:: https://coveralls.io/repos/github/NYTimes/collectd-rabbitmq/badge.svg?branch=master
+        :target: https://coveralls.io/github/NYTimes/collectd-rabbitmq?branch=master
 
 "A collected plugin, written in python, to collect statistics from RabbitMQ."
 
