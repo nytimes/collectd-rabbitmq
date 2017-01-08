@@ -39,7 +39,7 @@ test_requirements = [
 
 setup(
     name='collectd-rabbitmq',
-    version='1.14.1',
+    version='1.15.0',
     description="A collected plugin, written in python, to"
                 "collect statistics from RabbitMQ.",
     long_description=readme + '\n\n' + history,
