@@ -43,10 +43,13 @@ class TestCollectdPluginCallbacks(unittest.TestCase):
         """
         Asserts that read runs when plugin is loaded
         """
-        collectd_plugin.PLUGIN = MagicMock()
-        collectd_plugin.PLUGIN.read = MagicMock()
+        fake_config = MagicMock()
+        collectd_plugin.INSTANCES = [fake_config]
+        fake_config.read = MagicMock()
         collectd_plugin.read()
-        self.assertTrue(collectd_plugin.PLUGIN.read.called)
+        self.assertIsNotNone(collectd_plugin.CONFIGS)
+        self.assertTrue(fake_config.read.called)
+        collectd_plugin.INSTANCES = []
 
     @patch.object(collectd_plugin.CollectdPlugin, 'read')
     def test_read_no_plugin(self, mock_read):
@@ -56,18 +59,22 @@ class TestCollectdPluginCallbacks(unittest.TestCase):
         Args:
         :param mock_read a patched method from a :mod:`CollectdPlugin`.
         """
-        collectd_plugin.PLUGIN = None
         collectd_plugin.read()
         self.assertFalse(mock_read.called)
 
-    @patch.object(collectd_plugin.CollectdPlugin, '__new__')
-    def test_init_plugin(self, mock_plugin):
+    def test_init(self):
         """
-        Asserts that init create the plugin.
+        Asserts that init creates new instances of the CollectdPlugin for each
+        config.
         """
+
+        fake_config = MagicMock()
+        collectd_plugin.CONFIGS = [fake_config]
+        collectd_plugin.INSTANCES = []
         collectd_plugin.init()
-        self.assertTrue(mock_plugin.called)
-        self.assertIsNotNone(collectd_plugin.PLUGIN)
+        self.assertIsNotNone(collectd_plugin.INSTANCES)
+        collectd_plugin.INSTANCES = []
+        collectd_plugin.CONFIGS = []
 
 
 class BaseTestCollectdPlugin(unittest.TestCase):
@@ -81,6 +88,9 @@ class BaseTestCollectdPlugin(unittest.TestCase):
         realm = collectd.Config('Realm', ('RabbitMQ Management',))
         host = collectd.Config('Host', ('localhost',))
         port = collectd.Config('Port', ('15672',))
+        schema = collectd.Config('Scheme', ('http',))
+        vhost_prefix = collectd.Config('VHostPrefix', ('',))
+
         ignore_queues = [
             collectd.Config('Regex', ('amq-gen-.*',)),
             collectd.Config('Regex', ('tmp-.*',)),
@@ -91,17 +101,22 @@ class BaseTestCollectdPlugin(unittest.TestCase):
         ignore_queue = collectd.Config('Ignore', ('queue',), ignore_queues)
         ignore_exchange = collectd.Config('Ignore', ('exchange',),
                                           ignore_exchanges)
-        self.module = collectd.Config('Module',
-                                      ('rabbitmq',),
-                                      [username,
-                                       password,
-                                       host,
-                                       port,
-                                       realm,
-                                       ignore_queue,
-                                       ignore_exchange])
-        collectd_plugin.configure(self.module)
-        self.collectd_plugin = collectd_plugin.CollectdPlugin()
+        config_data = [username,
+                       password,
+                       host,
+                       port,
+                       realm,
+                       schema,
+                       ignore_queue,
+                       ignore_exchange,
+                       vhost_prefix
+                       ]
+        self.test_config = collectd.Config(
+            'Module', ('rabbitmq',), config_data)
+
+        collectd_plugin.configure(self.test_config)
+        self.collectd_plugin = collectd_plugin.CollectdPlugin(
+            collectd_plugin.CONFIGS[0])
 
 
 class TestCollectdPluginConfig(BaseTestCollectdPlugin):
@@ -113,10 +128,10 @@ class TestCollectdPluginConfig(BaseTestCollectdPlugin):
         """
         Asserts that configuration is populated properly.
         """
-        self.assertIsNotNone(collectd_plugin.CONFIG)
-        self.assertIsNotNone(collectd_plugin.CONFIG.connection)
-        self.assertIsNotNone(collectd_plugin.CONFIG.data_to_ignore)
-        self.assertEquals(len(collectd_plugin.CONFIG.data_to_ignore), 2)
+        self.assertIsNotNone(collectd_plugin.CONFIGS)
+        self.assertIsNotNone(collectd_plugin.CONFIGS[0].connection)
+        self.assertIsNotNone(collectd_plugin.CONFIGS[0].data_to_ignore)
+        self.assertEquals(len(collectd_plugin.CONFIGS[0].data_to_ignore), 2)
 
 
 class TestCollectdPluginExchanges(BaseTestCollectdPlugin):
@@ -257,6 +272,113 @@ class TestCollectdPluginQueues(BaseTestCollectdPlugin):
             'queues', 'TestQueue2', 'publish_out_details', 'rate'
         )
 
+    @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
+    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    def test_dispatch_queue_stats(self, mock_urlopen, mock_vhosts):
+        """
+        Assert queues are dispatched with preoper data.
+        Args:
+        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
+        """
+        mock_dispatch = MagicMock()
+        mock_queue_stats = dict(messages=10)
+        self.collectd_plugin.dispatch_values = mock_dispatch
+        self.collectd_plugin.dispatch_queue_stats(
+            mock_queue_stats, 'test_vhost', None, None)
+
+        self.assertTrue(mock_dispatch.called)
+
+    @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
+    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    def test_dispatch_empty_queue_stats(self, mock_urlopen, mock_vhosts):
+        """
+        Assert queues are not dispatched with no data.
+        Args:
+        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
+        """
+        mock_dispatch = MagicMock()
+        self.collectd_plugin.dispatch_values = mock_dispatch
+
+        self.collectd_plugin.dispatch_queue_stats(
+            None, 'test_vhost', None, None)
+
+        self.assertFalse(mock_dispatch.called)
+
+
+class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
+    """
+    Test the overview stats are dispatched properly.
+    """
+    @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
+    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    def test_overview_stats_no_details(self, mock_urlopen, mock_vhosts):
+        """
+        Assert overview stats are dispatched with even if there are no details.
+        This work by manking sure that only the default data is dispatched.
+
+        Args:
+        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
+        """
+        mock_get = Mock()
+        self.collectd_plugin.rabbit.get_overview_stats = mock_get
+        mock_stats = dict(cluster_name="test_cluster")
+        mock_get.return_value = mock_stats
+
+        mock_dispatch = MagicMock()
+        self.collectd_plugin.dispatch_values = mock_dispatch
+        self.collectd_plugin.dispatch_overview()
+
+        # Calculate the proper nubmer of dispatches without dispatching details
+        dispatches = sum(len(v) for v in self.collectd_plugin.overview_stats)
+
+        self.assertTrue(mock_dispatch.call_count < dispatches)
+
+    @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
+    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    def test_overview_stats_details(self, mock_urlopen, mock_vhosts):
+        """
+        Assert overview stats are dispatched with even if there are no details.
+        This work by manking sure that only the default data is dispatched.
+
+        Args:
+        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
+        """
+        mock_get = Mock()
+        self.collectd_plugin.rabbit.get_overview_stats = mock_get
+        mock_stats = dict(cluster_name="test_cluster",
+                          object_totals=dict(consumers_details=dict(rate=10)))
+        mock_get.return_value = mock_stats
+
+        mock_dispatch = MagicMock()
+        self.collectd_plugin.dispatch_values = mock_dispatch
+        self.collectd_plugin.dispatch_overview()
+
+        # Calculate the proper nubmer of default dispatches
+        dispatches = sum(len(v) for v in self.collectd_plugin.overview_stats)
+        # Add 1 for our detailed dispatch
+        dispatches = dispatches + 1
+        self.assertTrue(mock_dispatch.call_count < dispatches)
+
+    @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
+    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    def test_overview_no_stats(self, mock_urlopen, mock_vhosts):
+        """
+        Assert that no values are dispatched if no stats are found
+        Args:
+        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
+        """
+        self.collectd_plugin.rabbit.get_overview_stats = Mock()
+        self.collectd_plugin.rabbit.get_overview_stats.return_value = None
+        mock_dispatch = MagicMock()
+        self.collectd_plugin.dispatch_values = mock_dispatch
+        self.collectd_plugin.dispatch_overview()
+        self.assertFalse(mock_dispatch.called)
+
 
 class TestCollectdPluginVhost(BaseTestCollectdPlugin):
     """
@@ -297,6 +419,15 @@ class TestCollectdPluginVhost(BaseTestCollectdPlugin):
         """
         vhost = self.collectd_plugin.generate_vhost_name("vho/st")
         self.assertEquals(vhost, "rabbitmq_vho_slash_st")
+
+    def test_generate_vhost_prefix(self):
+        """
+        Assert vhost is prefixed with that from the config.
+        """
+        self.collectd_plugin.config.vhost_prefix = 'test_prefix'
+        vhost = self.collectd_plugin.generate_vhost_name("vhost")
+        self.assertEquals(vhost, "rabbitmq_test_prefix_vhost")
+        self.collectd_plugin.config.vhost_prefix = ''
 
 
 class TestCollectdPluginNodes(BaseTestCollectdPlugin):

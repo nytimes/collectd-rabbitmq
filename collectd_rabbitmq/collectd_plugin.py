@@ -180,9 +180,11 @@ class CollectdPlugin(object):
         name = self.generate_vhost_name('')
         node_names = []
         stats = self.rabbit.get_nodes()
+        collectd.debug("Node stats for {} {}".format(name, stats))
         for node in stats:
             node_name = node['name'].split('@')[1]
             if node_name in node_names:
+                # If we ahve already seen this node_name we
                 node_name = '%s%s' % (node_name, len(node_names))
             node_names.append(node_name)
             collectd.debug("Getting stats for %s node" % node_names)
@@ -227,6 +229,10 @@ class CollectdPlugin(object):
                 detail_values = []
                 for detail in self.message_details:
                     detail_values.append(details.get(detail, 0))
+
+                collectd.debug("Dispatching overview stat {} for {}".format(
+                    stat_name, prefixed_cluster_name))
+
                 self.dispatch_values(detail_values, prefixed_cluster_name,
                                      'overview', subtree_name,
                                      "rabbitmq_details", stat_name)
@@ -240,10 +246,11 @@ class CollectdPlugin(object):
             return
 
         vhost = self.generate_vhost_name(vhost)
-
+        collectd.debug(data)
         for name in self.queue_stats:
             if name not in data:
-                return
+                collectd.debug("Stat ({}) not found in data.".format(name))
+                continue
             collectd.debug("Dispatching stat %s for %s in %s" %
                            (name, plugin_instance, vhost))
 

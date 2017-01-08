@@ -64,7 +64,79 @@ def get_node_stats_data():
         "mem_used_details": {
             "rate": -28052.799999999999
         },
-        "name": "rabbit@fabrik",
+        "name": "rabbit@host1",
+        "net_ticktime": 60,
+        "os_pid": "29958",
+        "partitions": [],
+        "proc_total": 1048576,
+        "proc_used": 1626,
+        "proc_used_details": {
+            "rate": -6.2000000000000002
+        },
+        "processors": 2,
+        "rates_mode": "basic",
+        "run_queue": 0,
+        "sockets_total": 134908,
+        "sockets_used": 94,
+        "sockets_used_details": {
+            "rate": -0.20000000000000001
+        },
+        "type": "disc",
+        "uptime": 65806573
+    }, {
+        "disk_free": 20234559488,
+        "disk_free_details": {
+            "rate": -27852.799999999999
+        },
+        "disk_free_limit": 50000000,
+
+        "fd_total": 150000,
+        "fd_used": 113,
+        "fd_used_details": {
+            "rate": 0.20000000000000001
+        },
+        "mem_limit": 2030287257,
+        "mem_used": 108663688,
+        "mem_used_details": {
+            "rate": -28052.799999999999
+        },
+        "name": "rabbiti2@host2",
+        "net_ticktime": 60,
+        "os_pid": "29958",
+        "partitions": [],
+        "proc_total": 1048576,
+        "proc_used": 1626,
+        "proc_used_details": {
+            "rate": -6.2000000000000002
+        },
+        "processors": 2,
+        "rates_mode": "basic",
+        "run_queue": 0,
+        "sockets_total": 134908,
+        "sockets_used": 94,
+        "sockets_used_details": {
+            "rate": -0.20000000000000001
+        },
+        "type": "disc",
+        "uptime": 65806573
+    }, {
+        "disk_free": 20234559488,
+        "disk_free_details": {
+            "rate": -27852.799999999999
+        },
+        "disk_free_limit": 50000000,
+
+        "fd_total": 150000,
+        "fd_used": 113,
+        "fd_used_details": {
+            "rate": 0.20000000000000001
+        },
+        "mem_limit": 2030287257,
+        "mem_used": 108663688,
+        "mem_used_details": {
+            "rate": -28052.799999999999
+        },
+        "name": "rabbiti2@host2",
         "net_ticktime": 60,
         "os_pid": "29958",
         "partitions": [],
