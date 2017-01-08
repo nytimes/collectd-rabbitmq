@@ -7,12 +7,22 @@
     - role: jimbydamonk.rabbitmq
       rabbitmq_vhosts:
         - name: collectd
+        - name: vhost2
       rabbitmq_users:
         - vhost:    collectd
           name:     collectd
           password: collectd
           tags: administrator
+        - vhost:    vhost2
+          name:     collectd
+          password: collectd
+          tags: administrator
       rabbitmq_permissions:
+        - user: collectd
+          vhost: vhost2
+          configure: ".*"
+          write: ".*"
+          read: ".*"
         - user: collectd
           vhost: collectd
           configure: ".*"
@@ -24,9 +34,22 @@
           write: ".*"
           read: ".*"
     - role: jimbydamonk.collectd
+      collectd_plugins:
+        - syslog
+        - logfile
+
+      collectd_plugins_config:
+        logfile:
+          LogLevel: "info"
+          File: "/var/log/collectd.log"
+          Timestamp: true
+          PrintSeverity: false
+        syslog:
+          LogLevel: info
+
       collectd_template_files:
-       - src: "{{ playbook_dir }}/templates/graphite.conf.j2"
-       - src: "{{ playbook_dir }}/templates/rabbit.conf.j2"
+        - src: "{{ playbook_dir }}/templates/graphite.conf.j2"
+        - src: "{{ playbook_dir }}/templates/rabbit.conf.j2"
     - role: jimbydamonk.graphite
 
   tasks:
@@ -59,5 +82,30 @@
         type: queue
         routing_key: test
         vhost: collectd
+        login_user: collectd
+        login_password: collectd
+
+    - name: Create test topic exchange for vhost2
+      rabbitmq_exchange:
+        name: test_topic_exchange2
+        type: topic
+        vhost: vhost2
+        login_user: collectd
+        login_password: collectd
+
+    - name: Create test queue for vhost2
+      rabbitmq_queue:
+        name: test_queue2
+        vhost: vhost2
+        login_user: collectd
+        login_password: collectd
+
+    - name: Create test binding for vhost2
+      rabbitmq_binding:
+        name: test_topic_exchange2
+        destination: test_queue2
+        type: queue
+        routing_key: test
+        vhost: vhost2
         login_user: collectd
         login_password: collectd
