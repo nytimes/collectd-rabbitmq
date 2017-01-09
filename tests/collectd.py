@@ -130,6 +130,7 @@ def info(msg):
     """
     Logs as info level.
     """
+    test_loggable(msg)
     logging.info(msg)
 
 
@@ -137,6 +138,7 @@ def warning(msg):
     """
     Logs as warning level.
     """
+    test_loggable(msg)
     logging.warning(msg)
 
 
@@ -144,6 +146,7 @@ def error(msg):
     """
     Logs as error level.
     """
+    test_loggable(msg)
     logging.error(msg)
 
 
@@ -151,4 +154,13 @@ def debug(msg):
     """
     Logs as error level.
     """
+    test_loggable(msg)
     logging.debug(msg)
+
+
+def test_loggable(msg):
+    """
+    Ensure that logging messages are string to statisfy collectd.
+    """
+    if not isinstance(msg, basestring):
+        raise TypeError("Collectd requires that messages be strings")
