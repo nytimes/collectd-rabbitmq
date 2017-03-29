@@ -207,7 +207,10 @@ class CollectdPlugin(object):
         stats = self.rabbit.get_overview_stats()
         if stats is None:
             return None
-        prefixed_cluster_name = "rabbitmq_%s" % stats['cluster_name']
+
+        cluster_name = stats.get('cluster_name', None)
+        prefixed_cluster_name = "rabbitmq_%s" % cluster_name \
+                                if cluster_name else "rabbitmq"
         for subtree_name, keys in self.overview_stats.items():
             subtree = stats.get(subtree_name, {})
             for stat_name in keys:
