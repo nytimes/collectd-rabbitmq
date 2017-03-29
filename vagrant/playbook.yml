@@ -57,6 +57,10 @@
       pip:
         name: pika
 
+    - name: Install requests for ansible to be able to create rabbit objects
+      pip:
+        name: requests
+
     - name: Flush role handlers
       meta: flush_handlers
 

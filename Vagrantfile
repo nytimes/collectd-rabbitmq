@@ -3,7 +3,7 @@
 
 Vagrant.configure("2") do |config|
     config.vm.hostname = "collectd-rabbitmq"
-    config.vm.box = "ubuntu/trusty64"
+    config.vm.box = "ubuntu/xenial64"
     config.vm.network :forwarded_port, guest: 5672, host: 5672
     config.vm.network :forwarded_port, guest: 15672, host: 1567
     config.vm.network :forwarded_port, guest: 80, host: 8080
