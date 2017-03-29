@@ -338,7 +338,9 @@ class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
 
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
     @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
-    def test_overview_stats_no_cluster_name_no_details(self, mock_urlopen, mock_vhosts):
+    def test_overview_stats_no_cluster_name_no_details(self,
+                                                       mock_urlopen,
+                                                       mock_vhosts):
         """
         Assert overview stats without cluster name are dispatched with even
         if there are no details. This work by manking sure that only the
@@ -391,7 +393,9 @@ class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
 
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
     @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
-    def test_overview_stats_details_no_cluster_name(self, mock_urlopen, mock_vhosts):
+    def test_overview_stats_details_no_cluster_name(self,
+                                                    mock_urlopen,
+                                                    mock_vhosts):
         """
         Assert overview stats without cluster_name are dispatched.
         This work by manking sure that only the default data is dispatched.
