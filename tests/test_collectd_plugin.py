@@ -338,6 +338,34 @@ class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
 
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
     @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    def test_overview_stats_no_cluster_name_no_details(self,
+                                                       mock_urlopen,
+                                                       mock_vhosts):
+        """
+        Assert overview stats without cluster name are dispatched with even
+        if there are no details. This work by manking sure that only the
+        default data is dispatched.
+
+        Args:
+        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
+        """
+        mock_get = Mock()
+        self.collectd_plugin.rabbit.get_overview_stats = mock_get
+        mock_stats = dict()
+        mock_get.return_value = mock_stats
+
+        mock_dispatch = MagicMock()
+        self.collectd_plugin.dispatch_values = mock_dispatch
+        self.collectd_plugin.dispatch_overview()
+
+        # Calculate the proper nubmer of dispatches without dispatching details
+        dispatches = sum(len(v) for v in self.collectd_plugin.overview_stats)
+
+        self.assertTrue(mock_dispatch.call_count < dispatches)
+
+    @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
+    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
     def test_overview_stats_details(self, mock_urlopen, mock_vhosts):
         """
         Assert overview stats are dispatched with even if there are no details.
@@ -351,6 +379,34 @@ class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
         self.collectd_plugin.rabbit.get_overview_stats = mock_get
         mock_stats = dict(cluster_name="test_cluster",
                           object_totals=dict(consumers_details=dict(rate=10)))
+        mock_get.return_value = mock_stats
+
+        mock_dispatch = MagicMock()
+        self.collectd_plugin.dispatch_values = mock_dispatch
+        self.collectd_plugin.dispatch_overview()
+
+        # Calculate the proper nubmer of default dispatches
+        dispatches = sum(len(v) for v in self.collectd_plugin.overview_stats)
+        # Add 1 for our detailed dispatch
+        dispatches = dispatches + 1
+        self.assertTrue(mock_dispatch.call_count < dispatches)
+
+    @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
+    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    def test_overview_stats_details_no_cluster_name(self,
+                                                    mock_urlopen,
+                                                    mock_vhosts):
+        """
+        Assert overview stats without cluster_name are dispatched.
+        This work by manking sure that only the default data is dispatched.
+
+        Args:
+        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
+        """
+        mock_get = Mock()
+        self.collectd_plugin.rabbit.get_overview_stats = mock_get
+        mock_stats = dict(object_totals=dict(consumers_details=dict(rate=10)))
         mock_get.return_value = mock_stats
 
         mock_dispatch = MagicMock()
