@@ -578,6 +578,20 @@ class TestCollectdPluginDispatch(BaseTestCollectdPlugin):
         self.assertTrue(mock_values.dispatch.called)
 
     @patch('collectd.Values')
+    def test_dispatch_throws_exception(self, mock_collectd_values):
+        """
+        Assert dispath throws an exception.
+        Args:
+        :param mock_collectd_values: a test object
+        """
+        mock_values = collectd.Values()
+        mock_values.dispatch = MagicMock()
+        mock_collectd_values.side_effect = Exception('Collectd exception')
+        self.collectd_plugin.dispatch_values((1, 2, 3), 'vhost', 'plugin',
+                                             'plugin_instance', 'meteric_type')
+        self.assertFalse(mock_values.dispatch.called)
+
+    @patch('collectd.Values')
     def test_dispatch_non_list(self, mock_collectd_values):
         """
         Assert that a non list value is dispatched.
