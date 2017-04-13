@@ -304,29 +304,33 @@ class CollectdPlugin(object):
 
         collectd.debug("Dispatching %s values: %s" % (path, values))
 
-        metric = collectd.Values()
-        metric.host = host
+        try:
+            metric = collectd.Values()
+            metric.host = host
 
-        metric.plugin = plugin
+            metric.plugin = plugin
 
-        if plugin_instance:
-            metric.plugin_instance = plugin_instance
+            if plugin_instance:
+                metric.plugin_instance = plugin_instance
 
-        metric.type = metric_type
+            metric.type = metric_type
 
-        if type_instance:
-            metric.type_instance = type_instance
+            if type_instance:
+                metric.type_instance = type_instance
 
-        if utils.is_sequence(values):
-            metric.values = values
-        else:
-            metric.values = [values]
-        # Tiny hack to fix bug with write_http plugin in Collectd
-        # versions < 5.5.
-        # See https://github.com/phobos182/collectd-elasticsearch/issues/15
-        # for details
-        metric.meta = {'0': True}
-        metric.dispatch()
+            if utils.is_sequence(values):
+                metric.values = values
+            else:
+                metric.values = [values]
+            # Tiny hack to fix bug with write_http plugin in Collectd
+            # versions < 5.5.
+            # See https://github.com/phobos182/collectd-elasticsearch/issues/15
+            # for details
+            metric.meta = {'0': True}
+            metric.dispatch()
+        except Exception as ex:
+            collectd.warning("Failed to dispatch %s. Exception %s" %
+                             (path, ex))
 
 
 # Register callbacks
