@@ -39,6 +39,7 @@ This plugin supports a small amount of configuration options:
 * `Host`: The hostname that the rabbitmq server running on. Defaults to `localhost`
 * `Port`: The port that the rabbitmq server is listening on. Defaults to `15672`
 * `VHostPrefix`: Arbitrary string to prefix the vhost name with. Defaults to None
+* `CollectNodeStats`: Collect system stats for the node or not if set to False. Defaults to True
 * `Ignore`: The queue to ignore, matching by Regex.  See example.
 
 See `this example`_ for further details.

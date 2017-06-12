@@ -38,6 +38,7 @@ def configure(config_values):
     data_to_ignore = dict()
     scheme = 'http'
     vhost_prefix = None
+    node_stats = True
 
     for config_value in config_values.children:
         collectd.debug("%s = %s" % (config_value.key, config_value.values))
@@ -56,6 +57,8 @@ def configure(config_values):
                 scheme = config_value.values[0]
             elif config_value.key == 'VHostPrefix':
                 vhost_prefix = config_value.values[0]
+            elif config_value.key == 'CollectNodeStats':
+                node_stats = config_value.values[0]
             elif config_value.key == 'Ignore':
                 type_rmq = config_value.values[0]
                 data_to_ignore[type_rmq] = list()
@@ -66,7 +69,7 @@ def configure(config_values):
 
     auth = utils.Auth(username, password, realm)
     conn = utils.ConnectionInfo(host, port, scheme)
-    config = utils.Config(auth, conn, data_to_ignore, vhost_prefix)
+    config = utils.Config(auth, conn, data_to_ignore, vhost_prefix, node_stats)
     CONFIGS.append(config)
 
 
@@ -121,7 +124,8 @@ class CollectdPlugin(object):
         """
         Dispatches values to collectd.
         """
-        self.dispatch_nodes()
+        if self.config.node_stats:
+            self.dispatch_nodes()
         self.dispatch_overview()
         for vhost_name in self.rabbit.vhost_names:
             self.dispatch_exchanges(vhost_name)

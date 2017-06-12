@@ -65,11 +65,12 @@ class Config(object):
     """
 
     def __init__(self, auth, connection, data_to_ignore=None,
-                 vhost_prefix=None):
+                 vhost_prefix=None, node_stats=True):
         self.auth = auth
         self.connection = connection
         self.data_to_ignore = dict()
         self.vhost_prefix = vhost_prefix
+        self.node_stats = node_stats
 
         if data_to_ignore:
             for key, values in data_to_ignore.items():
