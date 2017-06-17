@@ -164,9 +164,9 @@ class TestCollectdPluginExchanges(BaseTestCollectdPlugin):
         e2_stats = get_message_stats_data('TestExchange2')['message_stats']
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            values=e1_stats['publish_in'],
-            metric_type='publish_in',
-            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-TestExchange1'
+            e1_stats['publish_in'],
+            'publish_in',
+            'vhost-rabbitmq_test_vhost-exchanges-TestExchange1'
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
@@ -607,7 +607,6 @@ class TestCollectdPluginDispatch(BaseTestCollectdPlugin):
             plugin_instance='plugin_instance',
             type_instance='type_instance'
         )
-        self.assertEqual(mock_values.host, "vhost")
         self.assertTrue(mock_values.dispatch.called)
 
     @patch('collectd.Values')
@@ -644,7 +643,6 @@ class TestCollectdPluginDispatch(BaseTestCollectdPlugin):
             plugin_instance='plugin_instance',
             type_instance='type_instance'
         )
-        self.assertEqual(mock_values.host, "vhost")
         self.assertTrue(mock_values.dispatch.called)
 
     @patch('collectd.Values')

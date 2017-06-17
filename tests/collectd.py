@@ -30,7 +30,7 @@ import logging
 
 class Config(object):
     """
-    Fake config oebject.
+    Fake config object.
     """
 
     def __init__(self, key, values, children=None):
