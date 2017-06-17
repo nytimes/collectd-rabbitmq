@@ -164,45 +164,56 @@ class TestCollectdPluginExchanges(BaseTestCollectdPlugin):
         e2_stats = get_message_stats_data('TestExchange2')['message_stats']
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            e1_stats['publish_in'], 'rabbitmq_test_vhost', 'exchanges',
-            'TestExchange1', 'publish_in'
+            values=e1_stats['publish_in'],
+            metric_type='publish_in',
+            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-TestExchange1'
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            e1_stats['publish_in_details']['rate'], 'rabbitmq_test_vhost',
-            'exchanges', 'TestExchange1', 'publish_in_details', 'rate'
+            values=e1_stats['publish_in_details']['rate'],
+            metric_type='publish_in_details',
+            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-TestExchange1',
+            type_instance='rate'
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            e1_stats['publish_out'], 'rabbitmq_test_vhost', 'exchanges',
-            'TestExchange1', 'publish_out'
+            values=e1_stats['publish_out'],
+            metric_type='publish_out',
+            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-TestExchange1'
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            e1_stats['publish_out_details']['rate'], 'rabbitmq_test_vhost',
-            'exchanges', 'TestExchange1', 'publish_out_details', 'rate'
+            values=e1_stats['publish_out_details']['rate'],
+            metric_type='publish_out_details',
+            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-TestExchange1',
+            type_instance='rate'
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            e2_stats['publish_in'], 'rabbitmq_test_vhost', 'exchanges',
-            'TestExchange2', 'publish_in'
+            values=e2_stats['publish_in'],
+            metric_type='publish_in',
+            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-TestExchange2'
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            e2_stats['publish_in_details']['rate'], 'rabbitmq_test_vhost',
-            'exchanges', 'TestExchange2', 'publish_in_details', 'rate'
+            values=e2_stats['publish_in_details']['rate'],
+            metric_type='publish_in_details',
+            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-TestExchange2',
+            type_instance='rate'
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            e2_stats['publish_out'], 'rabbitmq_test_vhost', 'exchanges',
-            'TestExchange2', 'publish_out'
+            values=e2_stats['publish_out'],
+            metric_type='publish_out',
+            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-TestExchange2'
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            e2_stats['publish_out_details']['rate'], 'rabbitmq_test_vhost',
-            'exchanges', 'TestExchange2', 'publish_out_details', 'rate'
+            values=e2_stats['publish_out_details']['rate'],
+            metric_type='publish_out_details',
+            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-TestExchange2',
+            type_instance='rate'
         )
-
 
 class TestCollectdPluginQueues(BaseTestCollectdPlugin):
     """
@@ -233,50 +244,62 @@ class TestCollectdPluginQueues(BaseTestCollectdPlugin):
         q2_stats = get_message_stats_data('TestQueue2')['message_stats']
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            q1_stats['publish_in'], 'rabbitmq_test_vhost', 'queues',
-            'TestQueue1', 'publish_in'
+            values=q1_stats['publish_in'],
+            metric_type='publish_in',
+            plugin_instance='vhost-rabbitmq_test_vhost-queues-TestQueue1'
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            q1_stats['publish_in_details']['rate'], 'rabbitmq_test_vhost',
-            'queues', 'TestQueue1', 'publish_in_details', 'rate'
+            values=q1_stats['publish_in_details']['rate'],
+            metric_type='publish_in_details',
+            plugin_instance='vhost-rabbitmq_test_vhost-queues-TestQueue1',
+            type_instance='rate'
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            q1_stats['publish_out'], 'rabbitmq_test_vhost', 'queues',
-            'TestQueue1', 'publish_out'
+            values=q1_stats['publish_out'],
+            metric_type='publish_out',
+            plugin_instance='vhost-rabbitmq_test_vhost-queues-TestQueue1'
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            q1_stats['publish_out_details']['rate'], 'rabbitmq_test_vhost',
-            'queues', 'TestQueue1', 'publish_out_details', 'rate'
+            values=q1_stats['publish_out_details']['rate'],
+            metric_type='publish_out_details',
+            plugin_instance='vhost-rabbitmq_test_vhost-queues-TestQueue1',
+            type_instance='rate'
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            q2_stats['publish_in'], 'rabbitmq_test_vhost', 'queues',
-            'TestQueue2', 'publish_in'
+            values=q2_stats['publish_in'],
+            metric_type='publish_in',
+            plugin_instance='vhost-rabbitmq_test_vhost-queues-TestQueue2'
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            q2_stats['publish_in_details']['rate'], 'rabbitmq_test_vhost',
-            'queues', 'TestQueue2', 'publish_in_details', 'rate'
+            values=q2_stats['publish_in_details']['rate'],
+            metric_type='publish_in_details',
+            plugin_instance='vhost-rabbitmq_test_vhost-queues-TestQueue2',
+            type_instance='rate'
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            q2_stats['publish_out'], 'rabbitmq_test_vhost', 'queues',
-            'TestQueue2', 'publish_out'
+            values=q2_stats['publish_out'],
+            metric_type='publish_out',
+            plugin_instance='vhost-rabbitmq_test_vhost-queues-TestQueue2'
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            q2_stats['publish_out_details']['rate'], 'rabbitmq_test_vhost',
-            'queues', 'TestQueue2', 'publish_out_details', 'rate'
+            values=q2_stats['publish_out_details']['rate'],
+            metric_type='publish_out_details',
+            plugin_instance='vhost-rabbitmq_test_vhost-queues-TestQueue2',
+            type_instance='rate'
         )
 
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
     @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
     def test_dispatch_queue_stats(self, mock_urlopen, mock_vhosts):
         """
-        Assert queues are dispatched with preoper data.
+        Assert queues are dispatched with proper data.
         Args:
         :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
         :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
@@ -285,7 +308,10 @@ class TestCollectdPluginQueues(BaseTestCollectdPlugin):
         mock_queue_stats = dict(messages=10)
         self.collectd_plugin.dispatch_values = mock_dispatch
         self.collectd_plugin.dispatch_queue_stats(
-            mock_queue_stats, 'test_vhost', None, None)
+            data=mock_queue_stats,
+            vhost='test_vhost',
+            message_source='queues',
+            message_source_name='TestQueue')
 
         self.assertTrue(mock_dispatch.called)
 
@@ -302,7 +328,10 @@ class TestCollectdPluginQueues(BaseTestCollectdPlugin):
         self.collectd_plugin.dispatch_values = mock_dispatch
 
         self.collectd_plugin.dispatch_queue_stats(
-            None, 'test_vhost', None, None)
+            data=None,
+            vhost='test_vhost',
+            message_source='queues',
+            message_source_name='TestQueue')
 
         self.assertFalse(mock_dispatch.called)
 
@@ -331,7 +360,7 @@ class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
         self.collectd_plugin.dispatch_values = mock_dispatch
         self.collectd_plugin.dispatch_overview()
 
-        # Calculate the proper nubmer of dispatches without dispatching details
+        # Calculate the proper number of dispatches without dispatching details
         dispatches = sum(len(v) for v in self.collectd_plugin.overview_stats)
 
         self.assertTrue(mock_dispatch.call_count < dispatches)
@@ -359,7 +388,7 @@ class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
         self.collectd_plugin.dispatch_values = mock_dispatch
         self.collectd_plugin.dispatch_overview()
 
-        # Calculate the proper nubmer of dispatches without dispatching details
+        # Calculate the proper number of dispatches without dispatching details
         dispatches = sum(len(v) for v in self.collectd_plugin.overview_stats)
 
         self.assertTrue(mock_dispatch.call_count < dispatches)
@@ -369,7 +398,7 @@ class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
     def test_overview_stats_details(self, mock_urlopen, mock_vhosts):
         """
         Assert overview stats are dispatched with even if there are no details.
-        This work by manking sure that only the default data is dispatched.
+        This work by making sure that only the default data is dispatched.
 
         Args:
         :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
@@ -385,7 +414,7 @@ class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
         self.collectd_plugin.dispatch_values = mock_dispatch
         self.collectd_plugin.dispatch_overview()
 
-        # Calculate the proper nubmer of default dispatches
+        # Calculate the proper number of default dispatches
         dispatches = sum(len(v) for v in self.collectd_plugin.overview_stats)
         # Add 1 for our detailed dispatch
         dispatches = dispatches + 1
@@ -398,7 +427,7 @@ class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
                                                     mock_vhosts):
         """
         Assert overview stats without cluster_name are dispatched.
-        This work by manking sure that only the default data is dispatched.
+        This work by making sure that only the default data is dispatched.
 
         Args:
         :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
@@ -413,7 +442,7 @@ class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
         self.collectd_plugin.dispatch_values = mock_dispatch
         self.collectd_plugin.dispatch_overview()
 
-        # Calculate the proper nubmer of default dispatches
+        # Calculate the proper number of default dispatches
         dispatches = sum(len(v) for v in self.collectd_plugin.overview_stats)
         # Add 1 for our detailed dispatch
         dispatches = dispatches + 1
@@ -446,35 +475,35 @@ class TestCollectdPluginVhost(BaseTestCollectdPlugin):
         Assert empty vhost is set properly.
         """
         vhost = self.collectd_plugin.generate_vhost_name(None)
-        self.assertEquals(vhost, "rabbitmq_default")
+        self.assertEquals(vhost, "default")
 
     def test_generate_vhost_default(self):
         """
         Assert default vhost is set properly.
         """
         vhost = self.collectd_plugin.generate_vhost_name("/")
-        self.assertEquals(vhost, "rabbitmq_default")
+        self.assertEquals(vhost, "default")
 
     def test_generate_vhost_start_slash(self):
         """
         Assert vhost that starts with a '/' is set properly.
         """
         vhost = self.collectd_plugin.generate_vhost_name("/vhost")
-        self.assertEquals(vhost, "rabbitmq_slash_vhost")
+        self.assertEquals(vhost, "slash_vhost")
 
     def test_generate_vhost_end_slash(self):
         """
         Assert vhost that ends with a '/' is set properly.
         """
         vhost = self.collectd_plugin.generate_vhost_name("vhost/")
-        self.assertEquals(vhost, "rabbitmq_vhost_slash")
+        self.assertEquals(vhost, "vhost_slash")
 
     def test_generate_vhost(self):
         """
         Assert vhost that contains a slash is set properly.
         """
         vhost = self.collectd_plugin.generate_vhost_name("vho/st")
-        self.assertEquals(vhost, "rabbitmq_vho_slash_st")
+        self.assertEquals(vhost, "vho_slash_st")
 
     def test_generate_vhost_prefix(self):
         """
@@ -482,7 +511,7 @@ class TestCollectdPluginVhost(BaseTestCollectdPlugin):
         """
         self.collectd_plugin.config.vhost_prefix = 'test_prefix'
         vhost = self.collectd_plugin.generate_vhost_name("vhost")
-        self.assertEquals(vhost, "rabbitmq_test_prefix_vhost")
+        self.assertEquals(vhost, "test_prefix_vhost")
         self.collectd_plugin.config.vhost_prefix = ''
 
 
@@ -572,23 +601,31 @@ class TestCollectdPluginDispatch(BaseTestCollectdPlugin):
         mock_values = collectd.Values()
         mock_values.dispatch = MagicMock()
         mock_collectd_values.return_value = mock_values
-        self.collectd_plugin.dispatch_values((1, 2, 3), 'vhost', 'plugin',
-                                             'plugin_instance', 'meteric_type')
+        self.collectd_plugin.dispatch_values(
+            values=(1, 2, 3),
+            metric_type='metric_type',
+            plugin_instance='plugin_instance',
+            type_instance='type_instance'
+        )
         self.assertEqual(mock_values.host, "vhost")
         self.assertTrue(mock_values.dispatch.called)
 
     @patch('collectd.Values')
     def test_dispatch_throws_exception(self, mock_collectd_values):
         """
-        Assert dispath throws an exception.
+        Assert dispatch throws an exception.
         Args:
         :param mock_collectd_values: a test object
         """
         mock_values = collectd.Values()
         mock_values.dispatch = MagicMock()
         mock_collectd_values.side_effect = Exception('Collectd exception')
-        self.collectd_plugin.dispatch_values((1, 2, 3), 'vhost', 'plugin',
-                                             'plugin_instance', 'meteric_type')
+        self.collectd_plugin.dispatch_values(
+            values=(1, 2, 3),
+            metric_type='metric_type',
+            plugin_instance='plugin_instance',
+            type_instance='type_instance'
+        )
         self.assertFalse(mock_values.dispatch.called)
 
     @patch('collectd.Values')
@@ -601,8 +638,12 @@ class TestCollectdPluginDispatch(BaseTestCollectdPlugin):
         mock_values = collectd.Values()
         mock_values.dispatch = MagicMock()
         mock_collectd_values.return_value = mock_values
-        self.collectd_plugin.dispatch_values('test_value', 'vhost', 'plugin',
-                                             'plugin_instance', 'meteric_type')
+        self.collectd_plugin.dispatch_values(
+            values='test_value',
+            metric_type='metric_type',
+            plugin_instance='plugin_instance',
+            type_instance='type_instance'
+        )
         self.assertEqual(mock_values.host, "vhost")
         self.assertTrue(mock_values.dispatch.called)
 
@@ -615,22 +656,29 @@ class TestCollectdPluginDispatch(BaseTestCollectdPlugin):
         """
         mock_values = collectd.Values()
         mock_collectd_values.return_value = mock_values
-        self.collectd_plugin.dispatch_values((1, 2, 3), '/', 'plugin',
-                                             'plugin_instance', 'meteric_type')
+        self.collectd_plugin.dispatch_values(
+            values=(1, 2, 3),
+            metric_type='metric_type',
+            plugin_instance='plugin_instance',
+            type_instance='type_instance'
+        )
         self.assertEqual(mock_values.meta, {'0': True})
 
     @patch('collectd.Values')
     def test_dispatch_type_instance(self, mock_collectd_values):
         """
-        Assert type_instance get set and dispatched.
+        Assert type_instance gets set and dispatched.
         Args:
         :param mock_collectd_values: a test object
         """
         mock_values = collectd.Values()
         mock_collectd_values.return_value = mock_values
-        self.collectd_plugin.dispatch_values((1, 2, 3), '/', 'plugin',
-                                             'plugin_instance', 'meteric_type',
-                                             'type_instance')
+        self.collectd_plugin.dispatch_values(
+            values=(1, 2, 3),
+            metric_type='metric_type',
+            plugin_instance='plugin_instance',
+            type_instance='type_instance'
+        )
         self.assertEqual(mock_values.type_instance, "type_instance")
 
 
@@ -644,9 +692,12 @@ class TestCollectdPluginDispatchMessageStats(BaseTestCollectdPlugin):
         Assert that empty data is not dispatched.
         """
         self.collectd_plugin.dispatch_values = Mock()
-        self.collectd_plugin.dispatch_message_stats(None, 'test_vhost',
-                                                    'test_plugin',
-                                                    'type_plugin_instance')
+        self.collectd_plugin.dispatch_message_stats(
+            data=None,
+            vhost='test_vhost',
+            message_source='queues',
+            message_source_name='TestQueue'
+        )
         self.assertFalse(self.collectd_plugin.dispatch_values.called)
 
     def test_dispatch_no_message_stats(self):
@@ -654,10 +705,12 @@ class TestCollectdPluginDispatchMessageStats(BaseTestCollectdPlugin):
         Assert that data without message_stats are not dispatched.
         """
         self.collectd_plugin.dispatch_values = Mock()
-        self.collectd_plugin.dispatch_message_stats(dict(test=Mock),
-                                                    'test_vhost',
-                                                    'test_plugin',
-                                                    'type_plugin_instance')
+        self.collectd_plugin.dispatch_message_stats(
+            data=dict(test=Mock),
+            vhost='test_vhost',
+            message_source='queues',
+            message_source_name='TestQueue'
+        )
         self.assertFalse(self.collectd_plugin.dispatch_values.called)
 
 if __name__ == '__main__':
