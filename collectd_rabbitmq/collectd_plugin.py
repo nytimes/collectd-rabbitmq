@@ -201,8 +201,9 @@ class CollectdPlugin(object):
                 for detail in self.message_details:
                     value = details.get(detail, 0)
                     self.dispatch_values(values=value,
-                                         metric_type=detail,
-                                         plugin_instance='vhost-' + name + '-node-' + node_name + '-details')
+                                         metric_type="%s_details" % stat_name,
+                                         plugin_instance='vhost-' + name + '-node-' + node_name + '-details',
+                                         type_instance=detail)
 
     def dispatch_overview(self):
         """
@@ -242,8 +243,9 @@ class CollectdPlugin(object):
                 collectd.debug("Dispatching overview stat {} for {}".format(stat_name, prefixed_cluster_name))
 
                 self.dispatch_values(values=detail_values,
+                                     metric_type='rabbitmq_details',
                                      plugin_instance='overview-' + prefixed_cluster_name + '-details',
-                                     metric_type=type_name)
+                                     type_instance=type_name)
 
     def dispatch_queue_stats(self, data, vhost, message_source, message_source_name):
         """
