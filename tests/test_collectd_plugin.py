@@ -158,21 +158,22 @@ class TestCollectdPluginExchanges(BaseTestCollectdPlugin):
         mock_vhosts.return_value = [dict(name='test_vhost')]
 
         self.collectd_plugin.dispatch_values = MagicMock()
-        self.collectd_plugin.dispatch_exchanges('test_vhost')
+        self.collectd_plugin.dispatch_exchanges(vhost_name='test_vhost')
 
         e1_stats = get_message_stats_data('TestExchange1')['message_stats']
         e2_stats = get_message_stats_data('TestExchange2')['message_stats']
 
         self.collectd_plugin.dispatch_values.assert_any_call(
-            e1_stats['publish_in'],
-            'publish_in',
-            'vhost-rabbitmq_test_vhost-exchanges-TestExchange1'
+            values=e1_stats['publish_in'],
+            metric_type='publish_in',
+            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-TestExchange1'
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
             values=e1_stats['publish_in_details']['rate'],
             metric_type='publish_in_details',
-            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-TestExchange1',
+            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-\
+                            TestExchange1',
             type_instance='rate'
         )
 
@@ -185,7 +186,8 @@ class TestCollectdPluginExchanges(BaseTestCollectdPlugin):
         self.collectd_plugin.dispatch_values.assert_any_call(
             values=e1_stats['publish_out_details']['rate'],
             metric_type='publish_out_details',
-            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-TestExchange1',
+            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-\
+                            TestExchange1',
             type_instance='rate'
         )
 
@@ -198,7 +200,8 @@ class TestCollectdPluginExchanges(BaseTestCollectdPlugin):
         self.collectd_plugin.dispatch_values.assert_any_call(
             values=e2_stats['publish_in_details']['rate'],
             metric_type='publish_in_details',
-            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-TestExchange2',
+            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-\
+                            TestExchange2',
             type_instance='rate'
         )
 
@@ -211,9 +214,11 @@ class TestCollectdPluginExchanges(BaseTestCollectdPlugin):
         self.collectd_plugin.dispatch_values.assert_any_call(
             values=e2_stats['publish_out_details']['rate'],
             metric_type='publish_out_details',
-            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-TestExchange2',
+            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-\
+                            TestExchange2',
             type_instance='rate'
         )
+
 
 class TestCollectdPluginQueues(BaseTestCollectdPlugin):
     """
