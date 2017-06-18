@@ -166,7 +166,9 @@ class TestCollectdPluginExchanges(BaseTestCollectdPlugin):
         self.collectd_plugin.dispatch_values.assert_any_call(
             values=e1_stats['publish_in'],
             metric_type='publish_in',
-            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-TestExchange1'
+            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-\
+                            TestExchange1',
+            type_instance=''
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
@@ -180,7 +182,9 @@ class TestCollectdPluginExchanges(BaseTestCollectdPlugin):
         self.collectd_plugin.dispatch_values.assert_any_call(
             values=e1_stats['publish_out'],
             metric_type='publish_out',
-            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-TestExchange1'
+            plugin_instance='vhost-rabbitmq_test_vhost-exchanges-\
+                            TestExchange1',
+            type_instance=''
         )
 
         self.collectd_plugin.dispatch_values.assert_any_call(
