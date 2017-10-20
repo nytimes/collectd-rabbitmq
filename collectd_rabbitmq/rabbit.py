@@ -23,12 +23,17 @@ import json
 import urllib
 import urllib2
 
+try:
+    import ssl
+    HAS_SSLCONTEXT = True
+except ImportError:
+    HAS_SSLCONTEXT = False
+
 
 class RabbitMQStats(object):
     """
         Class to interface with the RabbitMQ API.
     """
-
     def __init__(self, config):
         self.config = config
         self.api = "{0}/api".format(self.config.connection.url)
@@ -51,6 +56,14 @@ class RabbitMQStats(object):
         """
         return JSON object from URL.
         """
+        handlers = []
+        if HAS_SSLCONTEXT and self.config.connection.validate_certs is False:
+            ctx = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
+            ctx.options |= ssl.OP_NO_SSLv2
+            ctx.options |= ssl.OP_NO_SSLv3
+            ctx.verify_mode = ssl.CERT_NONE
+            ctx.check_hostname = False
+            handlers.append(urllib2.HTTPSHandler(context=ctx))
 
         url = "{0}/{1}".format(self.api, '/'.join(args))
         collectd.debug("Getting info for %s" % url)
@@ -60,7 +73,10 @@ class RabbitMQStats(object):
                                   uri=self.api,
                                   user=self.config.auth.username,
                                   passwd=self.config.auth.password)
-        opener = urllib2.build_opener(auth_handler)
+
+        handlers.append(auth_handler)
+
+        opener = urllib2.build_opener(*handlers)
         urllib2.install_opener(opener)
 
         try:

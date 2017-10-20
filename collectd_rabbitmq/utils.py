@@ -36,10 +36,12 @@ class ConnectionInfo(object):
     Stores connection information.
     """
 
-    def __init__(self, host='localhost', port=15672, scheme='http'):
+    def __init__(self, host='localhost', port=15672, scheme='http',
+                 validate_certs=True):
         self.host = host
         self.port = port
         self.scheme = scheme
+        self.validate_certs = validate_certs
 
     @property
     def url(self):
