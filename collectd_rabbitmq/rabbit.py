@@ -20,14 +20,9 @@ python plugin for collectd to obtain rabbitmq stats
 
 import collectd
 import json
+import ssl
 import urllib
 import urllib2
-
-try:
-    import ssl
-    HAS_SSLCONTEXT = True
-except ImportError:
-    HAS_SSLCONTEXT = False
 
 
 class RabbitMQStats(object):
@@ -57,7 +52,7 @@ class RabbitMQStats(object):
         return JSON object from URL.
         """
         handlers = []
-        if HAS_SSLCONTEXT and self.config.connection.validate_certs is False:
+        if self.config.connection.validate_certs is False:
             ctx = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
             ctx.options |= ssl.OP_NO_SSLv2
             ctx.options |= ssl.OP_NO_SSLv3
