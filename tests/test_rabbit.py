@@ -113,7 +113,8 @@ class TestBaseClass(unittest.TestCase):
     def setUp(self):
         self.conn = ConnectionInfo(host="example.com",
                                    port=15672,
-                                   scheme="http")
+                                   scheme="http",
+                                   validate_certs=False)
         self.auth = Auth()
         self.conf = Config(self.auth, self.conn)
         self.stats = RabbitMQStats(self.conf)
