@@ -37,6 +37,7 @@ def configure(config_values):
     collectd.debug('Configuring RabbitMQ Plugin')
     data_to_ignore = dict()
     scheme = 'http'
+    validate_certs = True
     vhost_prefix = None
 
     for config_value in config_values.children:
@@ -56,6 +57,8 @@ def configure(config_values):
                 scheme = config_value.values[0]
             elif config_value.key == 'VHostPrefix':
                 vhost_prefix = config_value.values[0]
+            elif config_value.key == 'ValidateCerts':
+                validate_certs = config_value.values[0]
             elif config_value.key == 'Ignore':
                 type_rmq = config_value.values[0]
                 data_to_ignore[type_rmq] = list()
@@ -65,7 +68,8 @@ def configure(config_values):
     global CONFIGS  # pylint: disable=W0603
 
     auth = utils.Auth(username, password, realm)
-    conn = utils.ConnectionInfo(host, port, scheme)
+    conn = utils.ConnectionInfo(host, port, scheme,
+                                validate_certs=validate_certs)
     config = utils.Config(auth, conn, data_to_ignore, vhost_prefix)
     CONFIGS.append(config)
 

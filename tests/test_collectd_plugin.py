@@ -90,6 +90,7 @@ class BaseTestCollectdPlugin(unittest.TestCase):
         port = collectd.Config('Port', ('15672',))
         schema = collectd.Config('Scheme', ('http',))
         vhost_prefix = collectd.Config('VHostPrefix', ('',))
+        validate_certs = collectd.Config('ValidateCerts', ('false',))
 
         ignore_queues = [
             collectd.Config('Regex', ('amq-gen-.*',)),
@@ -109,7 +110,8 @@ class BaseTestCollectdPlugin(unittest.TestCase):
                        schema,
                        ignore_queue,
                        ignore_exchange,
-                       vhost_prefix
+                       vhost_prefix,
+                       validate_certs
                        ]
         self.test_config = collectd.Config(
             'Module', ('rabbitmq',), config_data)
