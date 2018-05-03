@@ -102,8 +102,8 @@ class CollectdPlugin(object):
                      'deliver', 'deliver_noack', 'get', 'get_noack',
                      'deliver_get', 'redeliver', 'return']
     message_details = ['avg', 'avg_rate', 'rate', 'sample']
-    queue_stats = ['consumers', 'messages', 'messages_ready',
-                   'messages_unacknowledged']
+    queue_stats = ['consumers', 'consumer_utilisation', 'messages',
+                   'messages_ready', 'messages_unacknowledged']
     node_stats = ['disk_free', 'disk_free_limit', 'fd_total',
                   'fd_used', 'mem_limit', 'mem_used',
                   'proc_total', 'proc_used', 'processors', 'run_queue',
@@ -259,8 +259,10 @@ class CollectdPlugin(object):
                 continue
             collectd.debug("Dispatching stat %s for %s in %s" %
                            (name, plugin_instance, vhost))
-
             value = data.get(name, 0)
+            if name is 'consumer_utilisation':
+                if value is None:
+                    value = 0
             self.dispatch_values(value, vhost, plugin, plugin_instance, name)
 
     def dispatch_exchanges(self, vhost_name):

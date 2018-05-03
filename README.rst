@@ -92,6 +92,7 @@ _NOTE_: The `/` vhost name is sent as `default`
   * rate
 * memory
 * consumers
+* consumer_utilisation
 
 Exchanges
 ----------
