@@ -293,6 +293,24 @@ class TestCollectdPluginQueues(BaseTestCollectdPlugin):
 
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
     @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    def test_dispatch_queue_stats_consumer_utilisation(
+      self, mock_urlopen, mock_vhosts):
+        """
+        Assert queues are dispatched with preoper data.
+        Args:
+        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
+        """
+        mock_dispatch = MagicMock()
+        mock_queue_stats = dict(consumer_utilisation=None)
+        self.collectd_plugin.dispatch_values = mock_dispatch
+        self.collectd_plugin.dispatch_queue_stats(
+            mock_queue_stats, 'test_vhost', None, None)
+
+        self.assertTrue(mock_dispatch.called)
+
+    @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
+    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
     def test_dispatch_empty_queue_stats(self, mock_urlopen, mock_vhosts):
         """
         Assert queues are not dispatched with no data.
