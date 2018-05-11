@@ -41,6 +41,7 @@ This plugin supports a small amount of configuration options:
 * `ValidateCerts`: You can ignore verifying the SSL certificate if you set it to `false`. Defaults to `true`
 * `VHostPrefix`: Arbitrary string to prefix the vhost name with. Defaults to None
 * `Ignore`: The queue to ignore, matching by Regex.  See example.
+* `LocalQueuesOnly`: For clustered rabbitmq nodes report only queues resident on the node being queried. Defaults to `false`
 
 See `this example`_ for further details.
     .. _this example: config/collectd.conf
