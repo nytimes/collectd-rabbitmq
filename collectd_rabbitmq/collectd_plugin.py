@@ -73,7 +73,8 @@ def configure(config_values):
     auth = utils.Auth(username, password, realm)
     conn = utils.ConnectionInfo(host, port, scheme,
                                 validate_certs=validate_certs)
-    config = utils.Config(auth, conn, data_to_ignore, vhost_prefix, local_queues_only)
+    config = utils.Config(auth, conn, data_to_ignore, vhost_prefix,
+                          local_queues_only)
     CONFIGS.append(config)
 
 
