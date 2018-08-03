@@ -312,12 +312,14 @@ class CollectdPlugin(object):
 
         try:
             metric = collectd.Values()
-            metric.host = host
+            metric.host = ""
 
             metric.plugin = plugin
 
             if plugin_instance:
-                metric.plugin_instance = plugin_instance
+                metric.plugin_instance = "{0}_{1}".format(host, plugin_instance)
+            else:
+                metric.plugin_instance = host
 
             metric.type = metric_type
 
