@@ -39,6 +39,7 @@ def configure(config_values):
     scheme = 'http'
     validate_certs = True
     vhost_prefix = None
+    local_queues_only = False
 
     for config_value in config_values.children:
         collectd.debug("%s = %s" % (config_value.key, config_value.values))
@@ -59,6 +60,8 @@ def configure(config_values):
                 vhost_prefix = config_value.values[0]
             elif config_value.key == 'ValidateCerts':
                 validate_certs = config_value.values[0]
+            elif config_value.key == 'LocalQueuesOnly':
+                local_queues_only = config_value.values[0]
             elif config_value.key == 'Ignore':
                 type_rmq = config_value.values[0]
                 data_to_ignore[type_rmq] = list()
@@ -70,7 +73,8 @@ def configure(config_values):
     auth = utils.Auth(username, password, realm)
     conn = utils.ConnectionInfo(host, port, scheme,
                                 validate_certs=validate_certs)
-    config = utils.Config(auth, conn, data_to_ignore, vhost_prefix)
+    config = utils.Config(auth, conn, data_to_ignore, vhost_prefix,
+                          local_queues_only)
     CONFIGS.append(config)
 
 

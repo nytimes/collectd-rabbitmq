@@ -150,8 +150,15 @@ class RabbitMQStats(object):
         """
         Returns raw queue data.
         """
-        collectd.debug("Getting queues for %s" % vhost_name)
-        return self.get_info("queues", vhost_name)
+        if self.config.local_queues_only:
+            node = self.get_info("overview")["node"]
+            collectd.debug("Getting local queues for %s:%s" %
+                           (node, vhost_name))
+            nodes = self.get_info("queues", vhost_name)
+            return [x for x in nodes if x["node"] == node]
+        else:
+            collectd.debug("Getting queues for %s" % vhost_name)
+            return self.get_info("queues", vhost_name)
 
     def get_queue_names(self, vhost_name=None):
         """

@@ -67,11 +67,12 @@ class Config(object):
     """
 
     def __init__(self, auth, connection, data_to_ignore=None,
-                 vhost_prefix=None):
+                 vhost_prefix=None, local_queues_only=False):
         self.auth = auth
         self.connection = connection
         self.data_to_ignore = dict()
         self.vhost_prefix = vhost_prefix
+        self.local_queues_only = local_queues_only
 
         if data_to_ignore:
             for key, values in data_to_ignore.items():
