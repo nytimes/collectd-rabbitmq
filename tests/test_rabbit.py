@@ -377,6 +377,20 @@ class TestIgnoredQueues(TestStatsBaseClass):
         exchanges = self.stats.get_exchanges("test_vhost")
         self.assertIsNotNone(exchanges)
 
+    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    def test_get_exchanges_unavailable(self, mock_urlopen):
+        """
+        Asserts that get_exchanges returns an empty list if it can't access the
+        data.
+
+        Args:
+        :param mock_urlopen: A patched urllib object
+        """
+        mock_urlopen.side_effect = urllib2.HTTPError(
+            "testurl", 401, "Forbidden", None, None)
+        exchanges = self.stats.get_exchanges("test_vhost")
+        self.assertEqual(exchanges, [])
+
 
 class TestIgnoredExchanges(TestStatsBaseClass):
     """
@@ -446,6 +460,20 @@ class TestIgnoredExchanges(TestStatsBaseClass):
         mock_urlopen.side_effect = create_mock_url_repsonse
         queues = self.stats.get_queues("test_vhost")
         self.assertIsNotNone(queues)
+
+    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    def test_get_queue_unavailable(self, mock_urlopen):
+        """
+        Asserts that get_queues returns an empty list if it can't access the
+        data.
+
+        Args:
+        :param mock_urlopen: A patched urllib object
+        """
+        mock_urlopen.side_effect = urllib2.HTTPError(
+            "testurl", 401, "Forbidden", None, None)
+        queues = self.stats.get_queues("test_vhost")
+        self.assertEqual(queues, [])
 
 
 if __name__ == '__main__':
