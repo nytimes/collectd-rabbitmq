@@ -166,15 +166,22 @@ class CollectdPlugin(object):
             collectd.debug("Dispatching stat %s for %s in %s" %
                            (name, plugin_instance, vhost))
 
-            value = data['message_stats'].get(name, 0)
+            try:
+                value = data['message_stats'][name]
+            except KeyError:
+                continue
             self.dispatch_values(value, vhost, plugin, plugin_instance, name)
 
             details = data['message_stats'].get("%s_details" % name, None)
             if not details:
                 continue
             for detail in self.message_details:
+                try:
+                    value = details[detail]
+                except KeyError:
+                    continue
                 self.dispatch_values(
-                    (details.get(detail, 0)), vhost, plugin, plugin_instance,
+                    value, vhost, plugin, plugin_instance,
                     "%s_details" % name, detail)
 
     def dispatch_nodes(self):
@@ -193,14 +200,20 @@ class CollectdPlugin(object):
             node_names.append(node_name)
             collectd.debug("Getting stats for %s node" % node_names)
             for stat_name in self.node_stats:
-                value = node.get(stat_name, 0)
+                try:
+                    value = node[stat_name]
+                except KeyError:
+                    continue
                 self.dispatch_values(value, name, node_name, None, stat_name)
 
                 details = node.get("%s_details" % stat_name, None)
                 if not details:
                     continue
                 for detail in self.message_details:
-                    value = details.get(detail, 0)
+                    try:
+                        value = details[detail]
+                    except KeyError:
+                        continue
                     self.dispatch_values(value, name, node_name, None,
                                          "%s_details" % stat_name, detail)
 
@@ -226,7 +239,10 @@ class CollectdPlugin(object):
                 if re.match(stats_re, stat_name) is not None:
                     type_name = "rabbitmq_%s" % stat_name
 
-                value = subtree.get(stat_name, 0)
+                try:
+                    value = subtree[stat_name]
+                except KeyError:
+                    continue
                 self.dispatch_values(value, prefixed_cluster_name, "overview",
                                      subtree_name, type_name)
 
@@ -235,6 +251,9 @@ class CollectdPlugin(object):
                     continue
                 detail_values = []
                 for detail in self.message_details:
+                    # The length of detail_values list needs to match the
+                    # length of the declaration in types.db, so we pad with
+                    # zeros.
                     detail_values.append(details.get(detail, 0))
 
                 collectd.debug("Dispatching overview stat {} for {}".format(
@@ -259,7 +278,10 @@ class CollectdPlugin(object):
                 continue
             collectd.debug("Dispatching stat %s for %s in %s" %
                            (name, plugin_instance, vhost))
-            value = data.get(name, 0)
+            try:
+                value = data[name]
+            except KeyError:
+                continue
             if name is 'consumer_utilisation':
                 if value is None:
                     value = 0
