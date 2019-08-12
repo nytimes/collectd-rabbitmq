@@ -26,7 +26,7 @@ rabbitmq_consumer_utilisation    value:GAUGE:0:1
 rabbitmq_exchanges               value:GAUGE:0:U
 rabbitmq_channels                value:GAUGE:0:U
 rabbitmq_queues                  value:GAUGE:0:U
-rabbitmq_details                 avg:GAUGE:0:U avg_rate:GAUGE:0:U rate:GAUGE:0:U samples:GAUGE:0:U
+rabbitmq_details                 rate:GAUGE:0:U
 
 ack                 value:GAUGE:0:U
 ack_details         value:GAUGE:0:U

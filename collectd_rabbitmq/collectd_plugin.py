@@ -101,7 +101,7 @@ class CollectdPlugin(object):
     message_stats = ['ack', 'publish', 'publish_in', 'publish_out', 'confirm',
                      'deliver', 'deliver_noack', 'get', 'get_noack',
                      'deliver_get', 'redeliver', 'return']
-    message_details = ['avg', 'avg_rate', 'rate', 'sample']
+    message_details = ['rate']
     queue_stats = ['consumers', 'consumer_utilisation', 'messages',
                    'messages_ready', 'messages_unacknowledged']
     node_stats = ['disk_free', 'disk_free_limit', 'fd_total',
