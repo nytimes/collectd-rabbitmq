@@ -126,7 +126,7 @@ class RabbitMQStats(object):
         Returns raw exchange data.
         """
         collectd.debug("Getting exchanges for %s" % vhost_name)
-        return self.get_info("exchanges", vhost_name)
+        return self.get_info("exchanges", vhost_name) or list()
 
     def get_exchange_names(self, vhost_name=None):
         """
@@ -151,7 +151,7 @@ class RabbitMQStats(object):
         Returns raw queue data.
         """
         collectd.debug("Getting queues for %s" % vhost_name)
-        return self.get_info("queues", vhost_name)
+        return self.get_info("queues", vhost_name) or list()
 
     def get_queue_names(self, vhost_name=None):
         """

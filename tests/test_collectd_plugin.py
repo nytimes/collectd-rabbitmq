@@ -205,6 +205,35 @@ class TestCollectdPluginExchanges(BaseTestCollectdPlugin):
             'exchanges', 'TestExchange2', 'publish_out_details', 'rate'
         )
 
+    @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
+    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    def test_dispatch_exchanges_empty_value(self, mock_urlopen, mock_vhosts):
+        """
+        Assert an non-existant value is not dispatched.
+        Args:
+        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
+        """
+        self.collectd_plugin.rabbit.get_exchanges = Mock()
+        self.collectd_plugin.rabbit.get_exchanges.return_value = [
+            dict(name='TestExchange'),
+        ]
+
+        mock_urlopen.side_effect = create_mock_url_repsonse
+        mock_vhosts.return_value = [dict(name='test_vhost')]
+
+        self.collectd_plugin.dispatch_values = MagicMock()
+        self.collectd_plugin.dispatch_exchanges('test_vhost')
+
+        reported_metrics = [
+            call[0][4] for call in
+            self.collectd_plugin.dispatch_values.call_args_list
+        ]
+        self.assertEqual(
+            set(reported_metrics),
+            set(get_message_stats_data('TestExchange')['message_stats'].keys())
+        )
+
 
 class TestCollectdPluginQueues(BaseTestCollectdPlugin):
     """
@@ -325,6 +354,35 @@ class TestCollectdPluginQueues(BaseTestCollectdPlugin):
             None, 'test_vhost', None, None)
 
         self.assertFalse(mock_dispatch.called)
+
+    @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
+    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    def test_dispatch_queues_empty_values(self, mock_urlopen, mock_vhosts):
+        """
+        Assert empty values are not dispatched.
+        Args:
+        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
+        """
+        self.collectd_plugin.rabbit.get_queues = Mock()
+        self.collectd_plugin.rabbit.get_queues.return_value = [
+            dict(name='TestQueue'),
+        ]
+
+        mock_urlopen.side_effect = create_mock_url_repsonse
+        mock_vhosts.return_value = [dict(name='test_vhost')]
+
+        self.collectd_plugin.dispatch_values = MagicMock()
+        self.collectd_plugin.dispatch_queues('test_vhost')
+
+        reported_metrics = [
+            call[0][4] for call in
+            self.collectd_plugin.dispatch_values.call_args_list
+        ]
+        self.assertEqual(
+            set(reported_metrics),
+            set(get_message_stats_data('TestQueue')['message_stats'].keys())
+        )
 
 
 class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
