@@ -128,6 +128,9 @@ class CollectdPlugin(object):
         self.dispatch_nodes()
         self.dispatch_overview()
         for vhost_name in self.rabbit.vhost_names:
+            # skip vhost name /
+            if vhost_name == "%2F":
+                continue
             self.dispatch_exchanges(vhost_name)
             self.dispatch_queues(vhost_name)
 
