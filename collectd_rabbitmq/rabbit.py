@@ -21,8 +21,9 @@ python plugin for collectd to obtain rabbitmq stats
 import collectd
 import json
 import ssl
-import urllib
-import urllib2
+import urllib.error
+import urllib.parse
+import urllib.request
 
 
 class RabbitMQStats(object):
@@ -43,7 +44,7 @@ class RabbitMQStats(object):
         for item in items:
             name = item.get('name', None)
             if name:
-                name = urllib.quote(name, '')
+                name = urllib.parse.quote(name, '')
                 names.append(name)
         return names
 
@@ -58,12 +59,12 @@ class RabbitMQStats(object):
             ctx.options |= ssl.OP_NO_SSLv3
             ctx.verify_mode = ssl.CERT_NONE
             ctx.check_hostname = False
-            handlers.append(urllib2.HTTPSHandler(context=ctx))
+            handlers.append(urllib.request.HTTPSHandler(context=ctx))
 
         url = "{0}/{1}".format(self.api, '/'.join(args))
         collectd.debug("Getting info for %s" % url)
 
-        auth_handler = urllib2.HTTPBasicAuthHandler()
+        auth_handler = urllib.request.HTTPBasicAuthHandler()
         auth_handler.add_password(realm=self.config.auth.realm,
                                   uri=self.api,
                                   user=self.config.auth.username,
@@ -71,15 +72,15 @@ class RabbitMQStats(object):
 
         handlers.append(auth_handler)
 
-        opener = urllib2.build_opener(*handlers)
-        urllib2.install_opener(opener)
+        opener = urllib.request.build_opener(*handlers)
+        urllib.request.install_opener(opener)
 
         try:
-            info = urllib2.urlopen(url)
-        except urllib2.HTTPError as http_error:
+            info = urllib.request.urlopen(url)
+        except urllib.error.HTTPError as http_error:
             collectd.error("HTTP Error: %s" % http_error)
             return None
-        except urllib2.URLError as url_error:
+        except urllib.error.URLError as url_error:
             collectd.error("URL Error: %s" % url_error)
             return None
         except ValueError as value_error:

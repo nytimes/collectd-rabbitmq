@@ -17,7 +17,7 @@
 """ Module that contains utility classes and functions """
 
 import re
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 
 class Auth(object):

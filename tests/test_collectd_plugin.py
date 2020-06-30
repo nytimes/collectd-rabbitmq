@@ -133,7 +133,7 @@ class TestCollectdPluginConfig(BaseTestCollectdPlugin):
         self.assertIsNotNone(collectd_plugin.CONFIGS)
         self.assertIsNotNone(collectd_plugin.CONFIGS[0].connection)
         self.assertIsNotNone(collectd_plugin.CONFIGS[0].data_to_ignore)
-        self.assertEquals(len(collectd_plugin.CONFIGS[0].data_to_ignore), 2)
+        self.assertEqual(len(collectd_plugin.CONFIGS[0].data_to_ignore), 2)
 
 
 class TestCollectdPluginExchanges(BaseTestCollectdPlugin):
@@ -142,12 +142,13 @@ class TestCollectdPluginExchanges(BaseTestCollectdPlugin):
     """
 
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
-    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    @patch('collectd_rabbitmq.rabbit.urllib.request.urlopen')
     def test_dispatch_exchanges(self, mock_urlopen, mock_vhosts):
         """
         Assert exchanges are dispatched with the correct data.
         Args:
-        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_urlopen: a patched :mod:`rabbit.urllib.request.urlopen`
+            object
         :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
         """
         self.collectd_plugin.rabbit.get_exchanges = Mock()
@@ -206,12 +207,13 @@ class TestCollectdPluginExchanges(BaseTestCollectdPlugin):
         )
 
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
-    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    @patch('collectd_rabbitmq.rabbit.urllib.request.urlopen')
     def test_dispatch_exchanges_empty_value(self, mock_urlopen, mock_vhosts):
         """
         Assert an non-existant value is not dispatched.
         Args:
-        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_urlopen: a patched :mod:`rabbit.urllib.request.urlopen`
+            object
         :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
         """
         self.collectd_plugin.rabbit.get_exchanges = Mock()
@@ -240,12 +242,13 @@ class TestCollectdPluginQueues(BaseTestCollectdPlugin):
     Test the queue stats are dispatched properly.
     """
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
-    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    @patch('collectd_rabbitmq.rabbit.urllib.request.urlopen')
     def test_dispatch_queues(self, mock_urlopen, mock_vhosts):
         """
         Assert queues are dispatched with the correct data.
         Args:
-        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_urlopen: a patched :mod:`rabbit.urllib.request.urlopen`
+            object
         :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
         """
         self.collectd_plugin.rabbit.get_queues = Mock()
@@ -304,12 +307,13 @@ class TestCollectdPluginQueues(BaseTestCollectdPlugin):
         )
 
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
-    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    @patch('collectd_rabbitmq.rabbit.urllib.request.urlopen')
     def test_dispatch_queue_stats(self, mock_urlopen, mock_vhosts):
         """
         Assert queues are dispatched with preoper data.
         Args:
-        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_urlopen: a patched :mod:`rabbit.urllib.request.urlopen`
+            object
         :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
         """
         mock_dispatch = MagicMock()
@@ -321,13 +325,14 @@ class TestCollectdPluginQueues(BaseTestCollectdPlugin):
         self.assertTrue(mock_dispatch.called)
 
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
-    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    @patch('collectd_rabbitmq.rabbit.urllib.request.urlopen')
     def test_dispatch_queue_stats_consumer_utilisation(
       self, mock_urlopen, mock_vhosts):
         """
         Assert queues are dispatched with preoper data.
         Args:
-        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_urlopen: a patched :mod:`rabbit.urllib.request.urlopen`
+            object
         :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
         """
         mock_dispatch = MagicMock()
@@ -339,12 +344,13 @@ class TestCollectdPluginQueues(BaseTestCollectdPlugin):
         self.assertTrue(mock_dispatch.called)
 
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
-    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    @patch('collectd_rabbitmq.rabbit.urllib.request.urlopen')
     def test_dispatch_empty_queue_stats(self, mock_urlopen, mock_vhosts):
         """
         Assert queues are not dispatched with no data.
         Args:
-        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_urlopen: a patched :mod:`rabbit.urllib.request.urlopen`
+            object
         :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
         """
         mock_dispatch = MagicMock()
@@ -356,12 +362,13 @@ class TestCollectdPluginQueues(BaseTestCollectdPlugin):
         self.assertFalse(mock_dispatch.called)
 
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
-    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    @patch('collectd_rabbitmq.rabbit.urllib.request.urlopen')
     def test_dispatch_queues_empty_values(self, mock_urlopen, mock_vhosts):
         """
         Assert empty values are not dispatched.
         Args:
-        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_urlopen: a patched :mod:`rabbit.urllib.request.urlopen`
+            object
         :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
         """
         self.collectd_plugin.rabbit.get_queues = Mock()
@@ -390,14 +397,15 @@ class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
     Test the overview stats are dispatched properly.
     """
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
-    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    @patch('collectd_rabbitmq.rabbit.urllib.request.urlopen')
     def test_overview_stats_no_details(self, mock_urlopen, mock_vhosts):
         """
         Assert overview stats are dispatched with even if there are no details.
         This work by manking sure that only the default data is dispatched.
 
         Args:
-        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_urlopen: a patched :mod:`rabbit.urllib.request.urlopen`
+            object
         :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
         """
         mock_get = Mock()
@@ -415,7 +423,7 @@ class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
         self.assertTrue(mock_dispatch.call_count < dispatches)
 
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
-    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    @patch('collectd_rabbitmq.rabbit.urllib.request.urlopen')
     def test_overview_stats_no_cluster_name_no_details(self,
                                                        mock_urlopen,
                                                        mock_vhosts):
@@ -425,7 +433,8 @@ class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
         default data is dispatched.
 
         Args:
-        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_urlopen: a patched :mod:`rabbit.urllib.request.urlopen`
+            object
         :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
         """
         mock_get = Mock()
@@ -443,14 +452,15 @@ class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
         self.assertTrue(mock_dispatch.call_count < dispatches)
 
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
-    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    @patch('collectd_rabbitmq.rabbit.urllib.request.urlopen')
     def test_overview_stats_details(self, mock_urlopen, mock_vhosts):
         """
         Assert overview stats are dispatched with even if there are no details.
         This work by manking sure that only the default data is dispatched.
 
         Args:
-        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_urlopen: a patched :mod:`rabbit.urllib.request.urlopen`
+            object
         :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
         """
         mock_get = Mock()
@@ -470,7 +480,7 @@ class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
         self.assertTrue(mock_dispatch.call_count < dispatches)
 
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
-    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    @patch('collectd_rabbitmq.rabbit.urllib.request.urlopen')
     def test_overview_stats_details_no_cluster_name(self,
                                                     mock_urlopen,
                                                     mock_vhosts):
@@ -479,7 +489,8 @@ class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
         This work by manking sure that only the default data is dispatched.
 
         Args:
-        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_urlopen: a patched :mod:`rabbit.urllib.request.urlopen`
+            object
         :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
         """
         mock_get = Mock()
@@ -498,12 +509,13 @@ class TestCollectdPluginOverviewStats(BaseTestCollectdPlugin):
         self.assertTrue(mock_dispatch.call_count < dispatches)
 
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
-    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    @patch('collectd_rabbitmq.rabbit.urllib.request.urlopen')
     def test_overview_no_stats(self, mock_urlopen, mock_vhosts):
         """
         Assert that no values are dispatched if no stats are found
         Args:
-        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen` object
+        :param mock_urlopen: a patched :mod:`rabbit.urllib.request.urlopen`
+            object
         :param mock_vhosts: a patched method from a :mod:`CollectdPlugin`
         """
         self.collectd_plugin.rabbit.get_overview_stats = Mock()
@@ -524,35 +536,35 @@ class TestCollectdPluginVhost(BaseTestCollectdPlugin):
         Assert empty vhost is set properly.
         """
         vhost = self.collectd_plugin.generate_vhost_name(None)
-        self.assertEquals(vhost, "rabbitmq_default")
+        self.assertEqual(vhost, "rabbitmq_default")
 
     def test_generate_vhost_default(self):
         """
         Assert default vhost is set properly.
         """
         vhost = self.collectd_plugin.generate_vhost_name("/")
-        self.assertEquals(vhost, "rabbitmq_default")
+        self.assertEqual(vhost, "rabbitmq_default")
 
     def test_generate_vhost_start_slash(self):
         """
         Assert vhost that starts with a '/' is set properly.
         """
         vhost = self.collectd_plugin.generate_vhost_name("/vhost")
-        self.assertEquals(vhost, "rabbitmq_slash_vhost")
+        self.assertEqual(vhost, "rabbitmq_slash_vhost")
 
     def test_generate_vhost_end_slash(self):
         """
         Assert vhost that ends with a '/' is set properly.
         """
         vhost = self.collectd_plugin.generate_vhost_name("vhost/")
-        self.assertEquals(vhost, "rabbitmq_vhost_slash")
+        self.assertEqual(vhost, "rabbitmq_vhost_slash")
 
     def test_generate_vhost(self):
         """
         Assert vhost that contains a slash is set properly.
         """
         vhost = self.collectd_plugin.generate_vhost_name("vho/st")
-        self.assertEquals(vhost, "rabbitmq_vho_slash_st")
+        self.assertEqual(vhost, "rabbitmq_vho_slash_st")
 
     def test_generate_vhost_prefix(self):
         """
@@ -560,7 +572,7 @@ class TestCollectdPluginVhost(BaseTestCollectdPlugin):
         """
         self.collectd_plugin.config.vhost_prefix = 'test_prefix'
         vhost = self.collectd_plugin.generate_vhost_name("vhost")
-        self.assertEquals(vhost, "rabbitmq_test_prefix_vhost")
+        self.assertEqual(vhost, "rabbitmq_test_prefix_vhost")
         self.collectd_plugin.config.vhost_prefix = ''
 
 
@@ -569,12 +581,13 @@ class TestCollectdPluginNodes(BaseTestCollectdPlugin):
     Test that the read methood dispatches the proper data.
     """
 
-    @patch('collectd_rabbitmq.rabbit.urllib2.urlopen')
+    @patch('collectd_rabbitmq.rabbit.urllib.request.urlopen')
     def test_read(self, mock_urlopen):
         """
         Assert node stats are dispatched.
         Args:
-        :param mock_urlopen: a patched :mod:`rabbit.urllib2.urlopen' object
+        :param mock_urlopen: a patched :mod:`rabbit.urllib.request.urlopen'
+            object
         """
         mock_urlopen.side_effect = create_mock_node_url_repsonse
 
@@ -737,6 +750,7 @@ class TestCollectdPluginDispatchMessageStats(BaseTestCollectdPlugin):
                                                     'test_plugin',
                                                     'type_plugin_instance')
         self.assertFalse(self.collectd_plugin.dispatch_values.called)
+
 
 if __name__ == '__main__':
 

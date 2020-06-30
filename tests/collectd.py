@@ -162,5 +162,5 @@ def test_loggable(msg):
     """
     Ensure that logging messages are string to statisfy collectd.
     """
-    if not isinstance(msg, basestring):
+    if not isinstance(msg, str):
         raise TypeError("Collectd requires that messages be strings")
