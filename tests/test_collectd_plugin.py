@@ -327,7 +327,7 @@ class TestCollectdPluginQueues(BaseTestCollectdPlugin):
     @patch.object(collectd_plugin.rabbit.RabbitMQStats, 'get_vhosts')
     @patch('collectd_rabbitmq.rabbit.urllib.request.urlopen')
     def test_dispatch_queue_stats_consumer_utilisation(
-      self, mock_urlopen, mock_vhosts):
+            self, mock_urlopen, mock_vhosts):
         """
         Assert queues are dispatched with preoper data.
         Args:

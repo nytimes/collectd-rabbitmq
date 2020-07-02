@@ -51,7 +51,7 @@ def get_node_stats_data():
         "disk_free": 20234559488,
         "disk_free_details": {
             "rate": -27852.799999999999
-            },
+        },
         "disk_free_limit": 50000000,
 
         "fd_total": 150000,

@@ -184,7 +184,7 @@ class RabbitMQStats(object):
                         's' if not stat_name else '',
                         vhost_name))
 
-        if stat_type not in('exchange', 'queue'):
+        if stat_type not in ('exchange', 'queue'):
             raise ValueError("Unsupported stat type {0}".format(stat_type))
         stat_name_func = getattr(self, 'get_{0}_names'.format(stat_type))
         if not vhost_name:
