@@ -20,7 +20,9 @@ This module controls the interactions with collectd
 
 import collectd
 import re
-import urllib
+import urllib.error
+import urllib.parse
+import urllib.request
 
 from collectd_rabbitmq import rabbit
 from collectd_rabbitmq import utils
@@ -136,7 +138,7 @@ class CollectdPlugin(object):
         Generate a "normalized" vhost name without / (or escaped /).
         """
         if name:
-            name = urllib.unquote(name)
+            name = urllib.parse.unquote(name)
 
         if not name or name == '/':
             name = 'default'
@@ -282,7 +284,7 @@ class CollectdPlugin(object):
                 value = data[name]
             except KeyError:
                 continue
-            if name is 'consumer_utilisation':
+            if name == 'consumer_utilisation':
                 if value is None:
                     value = 0
             self.dispatch_values(value, vhost, plugin, plugin_instance, name)
@@ -293,7 +295,7 @@ class CollectdPlugin(object):
         """
         collectd.debug("Dispatching exchange data for {0}".format(vhost_name))
         stats = self.rabbit.get_exchange_stats(vhost_name=vhost_name)
-        for exchange_name, value in stats.iteritems():
+        for exchange_name, value in stats.items():
             self.dispatch_message_stats(value, vhost_name, 'exchanges',
                                         exchange_name)
 
@@ -303,7 +305,7 @@ class CollectdPlugin(object):
         """
         collectd.debug("Dispatching queue data for {0}".format(vhost_name))
         stats = self.rabbit.get_queue_stats(vhost_name=vhost_name)
-        for queue_name, value in stats.iteritems():
+        for queue_name, value in stats.items():
             self.dispatch_message_stats(value, vhost_name, 'queues',
                                         queue_name)
             self.dispatch_queue_stats(value, vhost_name, 'queues',

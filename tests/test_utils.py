@@ -38,7 +38,7 @@ class TestFilterDictionary(unittest.TestCase):
                          three='test3')
         test_keys = ['one', 'two']
         filtered = utils.filter_dictionary(test_dict, test_keys)
-        self.assertNotIn('three', filtered.keys())
+        self.assertNotIn('three', list(filtered.keys()))
 
     def test_filter_no_keys(self):
         """
@@ -48,7 +48,7 @@ class TestFilterDictionary(unittest.TestCase):
                          two='test2',
                          three='test3')
         filtered = utils.filter_dictionary(test_dict, None)
-        self.assertEquals(filtered, dict())
+        self.assertEqual(filtered, dict())
 
     def test_filter_no_dictionary(self):
         """
@@ -56,7 +56,7 @@ class TestFilterDictionary(unittest.TestCase):
         """
         test_keys = ['one', 'two']
         filtered = utils.filter_dictionary(None, test_keys)
-        self.assertEquals(filtered, dict())
+        self.assertEqual(filtered, dict())
 
 
 class TestConnectionInfo(unittest.TestCase):
@@ -95,9 +95,9 @@ class TestConfig(unittest.TestCase):
         Assert that host and port are set from URL.
         """
         conf = utils.Config(None, self.conn)
-        self.assertEquals(conf.connection.host, "example.com")
-        self.assertEquals(conf.connection.scheme, "http")
-        self.assertEquals(conf.connection.port, 15672)
+        self.assertEqual(conf.connection.host, "example.com")
+        self.assertEqual(conf.connection.scheme, "http")
+        self.assertEqual(conf.connection.port, 15672)
 
     def test_config_ignored(self):
         """
@@ -114,6 +114,7 @@ class TestConfig(unittest.TestCase):
         ignored_data = dict(exchange=['a.*', 'b.*'])
         conf = utils.Config(self.auth, self.conn, ignored_data)
         self.assertFalse(conf.is_ignored('exchange', 'notignored'))
+
 
 if __name__ == '__main__':
 

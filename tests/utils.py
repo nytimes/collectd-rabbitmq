@@ -18,7 +18,7 @@
 """ Simple test modules rabbit test module """
 
 import json
-import urlparse
+import urllib.parse
 
 
 def get_message_stats_data(name):
@@ -38,7 +38,7 @@ def create_mock_url_repsonse(url):
     """
     Returns mocked stats data based on URL.
     """
-    name = urlparse.urlparse(url).path.split('/')[-1:][0]
+    name = urllib.parse.urlparse(url).path.split('/')[-1:][0]
     data = get_message_stats_data(name)
     return MockURLResponse(json.dumps(data))
 
@@ -51,7 +51,7 @@ def get_node_stats_data():
         "disk_free": 20234559488,
         "disk_free_details": {
             "rate": -27852.799999999999
-            },
+        },
         "disk_free_limit": 50000000,
 
         "fd_total": 150000,
